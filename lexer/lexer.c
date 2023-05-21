@@ -6,7 +6,7 @@
 /*   By: oait-bad <oait-bad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 10:07:07 by oait-bad          #+#    #+#             */
-/*   Updated: 2023/05/21 11:41:49 by oait-bad         ###   ########.fr       */
+/*   Updated: 2023/05/21 11:49:48 by oait-bad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ int	lexer_init(t_lexer **lexer, char *input)
 	return (1);
 }
 
-//t_lexer	*the_lexer(char *input)
+t_lexer	*the_lexer(char *input)
 {
 	int		check;
 	char 	*word;
