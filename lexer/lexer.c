@@ -6,7 +6,7 @@
 /*   By: oait-bad <oait-bad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 10:07:07 by oait-bad          #+#    #+#             */
-/*   Updated: 2023/05/21 11:49:48 by oait-bad         ###   ########.fr       */
+/*   Updated: 2023/05/24 11:24:12 by oait-bad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,13 +30,34 @@ t_lexer	*the_lexer(char *input)
 	char 	*word;
 	t_lexer	*lexer;
 	t_lexer	*token;
+	t_lexer	*new_token;
 
 	if (!lexer_init(&lexer, input))
 		return (0);
 	while (lexer->input[lexer->i])
 	{
+		word = check_words(lexer, &(lexer->i));
+		if (word)
+		{
+			new_token = (t_lexer *)malloc(sizeof(t_lexer));
+			if (!node_init(&token))
+				return (0);
+			new_token->type = WORD;
+			new_token->value = word;
+			new_token->next = 0;
+			if (!lexer->tokens)
+				lexer->tokens = new_token;
+			else
+			{
+				lexer->current_token->next = new_token;
+				lexer->current_token = new_token;
+			}
+			lexer->current_token = new_token;
+			if (lexer->input[lexer->i + 1] == '\0')
+				break ;
+		}
 		check = check_quotes(lexer, &token);
-		if (!check)
+		if (!check && lexer->input[lexer->i] == '\0')
 			break ;
 		if (check == -1 && !check_tokens(lexer, &token))
 			break ;
@@ -46,21 +67,6 @@ t_lexer	*the_lexer(char *input)
 			lexer->current_token->next = token;
 		lexer->current_token = token;
 		lexer->i++;
-		word = check_words(lexer, &(lexer->i));
-		if (word)
-		{
-			if (!node_init(&token))
-				return (0);
-			token->type = WORD;
-			token->value = word;
-			token->next = 0;
-			if (!lexer->tokens)
-				lexer->tokens = token;
-			else
-				lexer->current_token->next = token;
-			lexer->current_token = token;
-			lexer->i++;
-		}
 	}
 	return (lexer);
 }

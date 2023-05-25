@@ -6,7 +6,7 @@
 /*   By: oait-bad <oait-bad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 01:34:48 by oait-bad          #+#    #+#             */
-/*   Updated: 2023/05/21 09:00:29 by oait-bad         ###   ########.fr       */
+/*   Updated: 2023/05/24 11:21:19 by oait-bad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ int	node_init(t_lexer **token)
 
 int	check_tokens(t_lexer *lexer, t_lexer **token)
 {
+	//printf("1111111111111\n");
 	if (lexer->input[lexer->i] == '|')
 	{
 		if (!node_init(token))
@@ -76,6 +77,7 @@ int	check_tokens(t_lexer *lexer, t_lexer **token)
 
 int	check_quotes(t_lexer *lexer, t_lexer **token)
 {
+	//printf("222222222222222\n");
 	if (lexer->input[lexer->i] == '\'')
 	{
 		if (!node_init(token))
@@ -110,16 +112,4 @@ char	*check_words(t_lexer *lexer, int *index)
 	str = ft_substr(lexer->input, *index, i - *index);
 	*index = i - 1;
 	return (str);
-}
-
-void	print_tokens(t_lexer *lexer)
-{
-	t_lexer	*tmp;
-
-	tmp = lexer;
-	while (tmp)
-	{
-		printf("type: %d\n", tmp->type);
-		tmp = tmp->next;
-	}
 }
