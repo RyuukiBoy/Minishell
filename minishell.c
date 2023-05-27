@@ -6,7 +6,7 @@
 /*   By: oait-bad <oait-bad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/08 16:37:28 by oait-bad          #+#    #+#             */
-/*   Updated: 2023/05/25 14:07:41 by oait-bad         ###   ########.fr       */
+/*   Updated: 2023/05/26 11:19:42 by oait-bad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,8 @@
 //	t_lexer	*lexer;
 //	t_lexer	*token;
 //	t_env	*envp;
-//	int		i;
-//	int		j;
+//	//int		i;
+//	//int		j;
 
 //	(void)argc;
 //	(void)argv;
@@ -34,12 +34,19 @@
 //		lexer->i = 0;
 //		lexer->tokens = 0;
 //		lexer->current_token = 0;
-//		lexer = the_lexer(line);
 //		token = lexer->tokens;
+//		lexer = the_lexer(line);
+//		envp = (t_env *)malloc(sizeof(t_env));
 //		while (token)
 //		{
-//			printf("type: %d\n", token->type);
-//			printf("value: %s\n", token->value);
+//			if (token->type == WORD)
+//			{
+//				token->value = dollar_sign(token->value, &envp->value);
+//				if (token->value == NULL)
+//					token->value = ft_strdup("");
+//				else
+//					printf("value = %s\n", token->value);
+//			}
 //			token = token->next;
 //		}
 //	}

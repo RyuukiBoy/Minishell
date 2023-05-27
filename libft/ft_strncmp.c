@@ -6,7 +6,7 @@
 /*   By: oait-bad <oait-bad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/08 17:23:00 by oait-bad          #+#    #+#             */
-/*   Updated: 2022/12/21 13:54:17 by oait-bad         ###   ########.fr       */
+/*   Updated: 2023/05/27 00:57:36 by oait-bad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,8 @@ int	ft_strncmp(const char *s1, const char *s2, size_t len)
 	str1 = (unsigned char *)s1;
 	str2 = (unsigned char *)s2;
 	i = 0;
+	if (str1 == 0 || str2 == 0 || len == 0)
+		return (0);
 	while (i < len && (str1[i] || str2[i]))
 	{
 		if (str1[i] > str2[i])

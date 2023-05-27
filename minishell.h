@@ -6,7 +6,7 @@
 /*   By: oait-bad <oait-bad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/08 16:37:31 by oait-bad          #+#    #+#             */
-/*   Updated: 2023/05/25 14:03:42 by oait-bad         ###   ########.fr       */
+/*   Updated: 2023/05/27 10:58:23 by oait-bad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,9 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 # include "libft/libft.h"
+
+# define KRED  "\x1B[31m"
+# define KWHT  "\x1B[37m"
 
 # define PIPE 1
 # define LESSER 2
@@ -47,6 +50,8 @@ typedef struct s_lexer
 
 typedef struct s_env
 {
+	int				i;
+	char			*input;
 	char			**envp;
 	char			*key;
 	char			*value;
@@ -58,6 +63,7 @@ int	check_quotes(t_lexer *lexer, t_lexer **token);
 t_lexer	*the_lexer(char *input);
 char	*check_words(t_lexer *lexer, int *index);
 int	node_init(t_lexer **token);
-char *dollars(char *str, char **envp);
+char	**get_env(char **env);
+char	**dollar_sign(char **args, char **envp);
 
 #endif
