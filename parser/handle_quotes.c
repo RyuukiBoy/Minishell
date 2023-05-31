@@ -6,89 +6,50 @@
 /*   By: oait-bad <oait-bad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 14:44:04 by oait-bad          #+#    #+#             */
-/*   Updated: 2023/05/26 15:24:47 by oait-bad         ###   ########.fr       */
+/*   Updated: 2023/05/31 11:41:13 by oait-bad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-// set the quotes by the help of lexer.c and parser.c
-
-void	handle_quotes(t_lexer *lexer)
+char	*delete_quotes(char *str)
 {
 	int		i;
 	int		j;
-	char	*tmp;
+	char	*new;
 
 	i = 0;
 	j = 0;
-	tmp = ft_strdup(lexer->input);
-	while (lexer->input[i])
+	new = (char *)malloc(sizeof(char) * (ft_strlen(str) + 1));
+	while (str[i])
 	{
-		if (lexer->input[i] == '\'')
+		if (str[i] != '\'' && str[i] != '\"')
 		{
-			i++;
-			while (lexer->input[i] && lexer->input[i] != '\'')
-				i++;
-			i++;
-		}
-		else if (lexer->input[i] == '\"')
-		{
-			i++;
-			while (lexer->input[i] && lexer->input[i] != '\"')
-			{
-				if (lexer->input[i] == '$')
-				{
-					i++;
-					while (lexer->input[i] && lexer->input[i] != ' ' && lexer->input[i] != '\"')
-						i++;
-				}
-				i++;
-			}
-			i++;
-		}
-		else
-		{
-			tmp[j] = lexer->input[i];
-			i++;
+			new[j] = str[i];
 			j++;
 		}
+		i++;
 	}
-	tmp[j] = '\0';
-	lexer->input = ft_strdup(tmp);
-	free(tmp);
+	new[j] = '\0';
+	return (new);
 }
-
-//create a main function to test the function with readline and the lexer
 
 //int main(int argc, char **argv, char **env)
 //{
 //	char	*line;
-//	t_lexer	*lexer;
-//	t_lexer	*token;
-//	t_env	*envp;
-//	char	*str;
-//	//int		i;
-//	//int		j;
+//	char	*new;
 
 //	(void)argc;
 //	(void)argv;
-//	lexer = (t_lexer *)malloc(sizeof(t_lexer));
-//	envp = (t_env *)malloc(sizeof(t_env));
-//	envp->envp = get_env(env);
+//	(void)env;
 //	while (1)
 //	{
 //		line = readline("minishell$ ");
 //		if (!line)
 //			break ;
-//		lexer->input = line;
-//		lexer->i = 0;
-//		lexer->tokens = 0;
-//		lexer->current_token = 0;
-//		token = lexer->tokens;
-//		lexer = the_lexer(line);
-//		handle_quotes(lexer);
-//		str = dollar_sign(lexer->input, envp);
+//		new = delete_quotes(line);
+//		printf("%s\n", new);
+//		free(line);
+//		free(new);
 //	}
-//	return (0);
 //}

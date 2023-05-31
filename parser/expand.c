@@ -6,18 +6,19 @@
 /*   By: oait-bad <oait-bad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/22 11:39:05 by oait-bad          #+#    #+#             */
-/*   Updated: 2023/05/27 11:33:56 by oait-bad         ###   ########.fr       */
+/*   Updated: 2023/05/31 11:31:05 by oait-bad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-//int	is_special_char(char c)
-//{
-//	if (c == '$' || c == ',' || c == '.' || c == '/' || c == ':' || c == '=')
-//		return (1);
-//	return (0);
-//}
+int	is_special_char(char *str)
+{
+	if (*str == '$' || *str == ',' || *str == '.'
+		|| *str == '/' || *str == ':' || *str == '=')
+		return (1);
+	return (0);
+}
 
 char	**get_env(char **env)
 {
@@ -41,12 +42,14 @@ char	**get_env(char **env)
 char	*get_env_value(char *key, char **env)
 {
 	int		i;
+	int		j;
 	char	*value;
 	char	*tmp;
 
 	i = 0;
 	while (env[i])
 	{
+		j = 0;
 		tmp = ft_strjoin(key, "=");
 		if (ft_strnstr(env[i], tmp, ft_strlen(tmp)))
 		{
@@ -82,14 +85,20 @@ char	*get_env_key(char *input)
 char	**dollar_sign(char **args, char **env)
 {
 	int		i;
+	int		j;
 	char	*key;
 	char	*value;
 	char	*tmp;
+	t_lexer		*token;
 
 	i = 0;
+	j = 0;
+	token = the_lexer(args[i]);
+	if (token->type == DOUBLE_QUOTE || token->type == SINGLE_QUOTE)
+		args[i] = delete_quotes(args[i]);
 	while (args[i])
 	{
-		while (args[i][0] == '$')
+		if (*args[i] == '$')
 		{
 			key = get_env_key(args[i] + 1);
 			value = get_env_value(key, env);
@@ -106,30 +115,30 @@ char	**dollar_sign(char **args, char **env)
 	return (args);
 }
 
-//int main(int argc, char **argv, char **env)
-//{
-//	char	*line;
-//	char	**args;
-//	char	**envp;
-//	int		i;
-//	//int		j;
+int main(int argc, char **argv, char **env)
+{
+	char	*line;
+	char	**args;
+	char	**envp;
+	int		i;
+	//int		j;
 
-//	(void)argc;
-//	(void)argv;
-//	envp = get_env(env);
-//	while (1)
-//	{
-//		line = readline("minishell$ ");
-//		if (!line)
-//			break ;
-//		args = dollar_sign(ft_split(line, ' '), envp);
-//		i = 0;
-//		while (args[i])
-//		{
-//			printf("%s\n", args[i]);
-//			i++;
-//		}
-//		free(line);
-//		free(args);
-//	}
-//}
+	(void)argc;
+	(void)argv;
+	envp = get_env(env);
+	while (1)
+	{
+		line = readline("minishell$ ");
+		if (!line)
+			break ;
+		args = dollar_sign(ft_split(line, ' '), envp);
+		i = 0;
+		while (args[i])
+		{
+			printf("%s\n", delete_quotes(args[i]));
+			i++;
+		}
+		free(line);
+		free(args);
+	}
+}

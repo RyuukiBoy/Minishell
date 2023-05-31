@@ -6,7 +6,7 @@
 /*   By: oait-bad <oait-bad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/08 16:37:31 by oait-bad          #+#    #+#             */
-/*   Updated: 2023/05/27 10:58:23 by oait-bad         ###   ########.fr       */
+/*   Updated: 2023/05/31 11:28:48 by oait-bad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,5 +65,8 @@ char	*check_words(t_lexer *lexer, int *index);
 int	node_init(t_lexer **token);
 char	**get_env(char **env);
 char	**dollar_sign(char **args, char **envp);
+char	*get_env_value(char *key, char **env);
+char	*get_env_key(char *input);
+char	*delete_quotes(char *str);
 
 #endif
