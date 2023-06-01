@@ -6,7 +6,7 @@
 /*   By: oait-bad <oait-bad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/08 16:37:31 by oait-bad          #+#    #+#             */
-/*   Updated: 2023/05/31 11:28:48 by oait-bad         ###   ########.fr       */
+/*   Updated: 2023/06/01 13:17:54 by oait-bad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,9 @@
 # define HEREDOC 11
 # define APPEND 12
 # define WORD 13
+# define INDOUBLE 14
+# define INSINGLE 15
+# define DEFAULT 16
 
 typedef struct s_lexer
 {
@@ -45,6 +48,7 @@ typedef struct s_lexer
 	char			*value;
 	struct s_lexer	*tokens;
 	struct s_lexer	*current_token;
+	struct s_lexer	*prev;
 	struct s_lexer	*next;
 }				t_lexer;
 
@@ -58,6 +62,17 @@ typedef struct s_env
 	struct s_env	*next;
 }				t_env;
 
+typedef struct s_cmd
+{
+	char			*input;
+	char			**args;
+	char			**envp;
+	char			*cmd;
+	char			*path;
+	struct s_cmd	*next;
+}				t_cmd;
+
+
 int	check_tokens(t_lexer *lexer, t_lexer **token);
 int	check_quotes(t_lexer *lexer, t_lexer **token);
 t_lexer	*the_lexer(char *input);
@@ -68,5 +83,8 @@ char	**dollar_sign(char **args, char **envp);
 char	*get_env_value(char *key, char **env);
 char	*get_env_key(char *input);
 char	*delete_quotes(char *str);
+char	*expand_inside_quotes(char *str);
+char	**get_env(char **env);
+void	handle_redirections(t_cmd *cmd);
 
 #endif

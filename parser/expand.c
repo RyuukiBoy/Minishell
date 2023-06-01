@@ -6,7 +6,7 @@
 /*   By: oait-bad <oait-bad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/22 11:39:05 by oait-bad          #+#    #+#             */
-/*   Updated: 2023/05/31 11:31:05 by oait-bad         ###   ########.fr       */
+/*   Updated: 2023/06/01 00:43:21 by oait-bad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,17 +89,14 @@ char	**dollar_sign(char **args, char **env)
 	char	*key;
 	char	*value;
 	char	*tmp;
-	t_lexer		*token;
 
 	i = 0;
 	j = 0;
-	token = the_lexer(args[i]);
-	if (token->type == DOUBLE_QUOTE || token->type == SINGLE_QUOTE)
-		args[i] = delete_quotes(args[i]);
 	while (args[i])
 	{
 		if (*args[i] == '$')
 		{
+			args[i] = expand_inside_quotes(args[i]);
 			key = get_env_key(args[i] + 1);
 			value = get_env_value(key, env);
 			if (value == NULL)
@@ -115,30 +112,30 @@ char	**dollar_sign(char **args, char **env)
 	return (args);
 }
 
-int main(int argc, char **argv, char **env)
-{
-	char	*line;
-	char	**args;
-	char	**envp;
-	int		i;
-	//int		j;
+//int main(int argc, char **argv, char **env)
+//{
+//	char	*line;
+//	char	**args;
+//	char	**envp;
+//	int		i;
+//	//int		j;
 
-	(void)argc;
-	(void)argv;
-	envp = get_env(env);
-	while (1)
-	{
-		line = readline("minishell$ ");
-		if (!line)
-			break ;
-		args = dollar_sign(ft_split(line, ' '), envp);
-		i = 0;
-		while (args[i])
-		{
-			printf("%s\n", delete_quotes(args[i]));
-			i++;
-		}
-		free(line);
-		free(args);
-	}
-}
+//	(void)argc;
+//	(void)argv;
+//	envp = get_env(env);
+//	while (1)
+//	{
+//		line = readline("minishell$ ");
+//		if (!line)
+//			break ;
+//		args = dollar_sign(ft_split(line, ' '), envp);
+//		i = 0;
+//		while (args[i])
+//		{
+//			printf("%s\n", args[i]);
+//			i++;
+//		}
+//		free(line);
+//		free(args);
+//	}
+//}

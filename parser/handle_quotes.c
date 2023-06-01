@@ -6,7 +6,7 @@
 /*   By: oait-bad <oait-bad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 14:44:04 by oait-bad          #+#    #+#             */
-/*   Updated: 2023/05/31 11:41:13 by oait-bad         ###   ########.fr       */
+/*   Updated: 2023/05/31 15:26:42 by oait-bad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,22 +34,54 @@ char	*delete_quotes(char *str)
 	return (new);
 }
 
-//int main(int argc, char **argv, char **env)
-//{
-//	char	*line;
-//	char	*new;
+// expand inside quotes
 
-//	(void)argc;
-//	(void)argv;
-//	(void)env;
+char	*expand_inside_quotes(char *str)
+{
+	int		i;
+	int		j;
+	char	*new;
+
+	i = 0;
+	j = 0;
+	new = (char *)malloc(sizeof(char) * (ft_strlen(str) + 1));
+	while (str[i])
+	{
+		if (str[i] == '$')
+		{
+			new[j] = str[i];
+			j++;
+			i++;
+			while (str[i] && str[i] != ' ' && str[i] != '\"' && str[i] != '\'')
+			{
+				new[j] = str[i];
+				j++;
+				i++;
+			}
+		}
+		else
+		{
+			new[j] = str[i];
+			j++;
+			i++;
+		}
+	}
+	new[j] = '\0';
+	return (new);
+}
+
+// main to test the function using loop with readline
+
+//int main()
+//{
+//	char *str;
+//	char *new;
+
 //	while (1)
 //	{
-//		line = readline("minishell$ ");
-//		if (!line)
-//			break ;
-//		new = delete_quotes(line);
-//		printf("%s\n", new);
-//		free(line);
-//		free(new);
+//		str = readline("enter a string : ");
+//		new = expand_inside_quotes(str);
+//		printf("new string : %s\n", new);
 //	}
+//	return (0);
 //}
