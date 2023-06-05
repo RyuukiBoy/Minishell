@@ -6,158 +6,94 @@
 /*   By: oait-bad <oait-bad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/01 00:27:19 by oait-bad          #+#    #+#             */
-/*   Updated: 2023/06/01 13:38:06 by oait-bad         ###   ########.fr       */
+/*   Updated: 2023/06/05 22:43:50 by oait-bad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int	ft_tablen(char **tab)
+int		is_between_quotes(char *str)
 {
-	int	i;
-
-	i = 0;
-	while (tab[i])
-		i++;
-	return (i);
-}
-
-t_cmd	*parse_cmd(char *input)
-{
-	t_cmd	*cmd;
-	char	**args;
+	int		single;
+	int		doubleq;
 	int		i;
 
-	i = 0;
-	args = ft_split(input, ' ');
-	cmd = NULL;
-	if (args[0])
+	i = ft_strlen(str) - 1;
+	single = 0;
+	doubleq = 0;
+	while (i >= 0)
 	{
-		cmd = (t_cmd *)malloc(sizeof(t_cmd));
-		cmd->args = (char **)malloc(sizeof(char *) * (ft_tablen(args) + 1));
-		while (args[i])
+		if (str[i] == '\'')
+			single++;
+		if (str[i] == '\"')
+			doubleq++;
+		i--;
+	}
+	if (single % 2 == 0 && doubleq % 2 == 0)
+		return (0);
+	return (1);
+}
+
+char	**split_by_pipes(char **input)
+{
+	char	**pipes;
+	int		i;
+	int		j;
+	int		k;
+
+	i = 0;
+	j = 0;
+	k = 0;
+	pipes = (char **)malloc(sizeof(char *) * (ft_strlen(*input) + 1));
+	while ((*input)[i])
+	{
+		if ((*input)[i] == '\'' || (*input)[i] == '\"')
 		{
-			cmd->args[i] = ft_strdup(args[i]);
 			i++;
+			while ((*input)[i] && (*input)[i] != '\'' && (*input)[i] != '\"')
+				i++;
 		}
-		cmd->args[i] = NULL;
+		if ((*input)[i] == '|')
+		{
+			pipes[j] = ft_substr(*input, k, i - k);
+			k = i + 1;
+			j++;
+		}
+		i++;
 	}
+	pipes[j] = ft_substr(*input, k, i - k);
+	pipes[j + 1] = NULL;
+	return (pipes);
+}
+
+t_cmd	*init_cmd(char *line)
+{
+	t_cmd	*cmd;
+
+	cmd = (t_cmd *)malloc(sizeof(t_cmd));
+	cmd->input = ft_strdup(line);
+	cmd->args = NULL;
+	cmd->pipes = NULL;
+	cmd->redirections = NULL;
+	cmd->next = NULL;
 	return (cmd);
 }
 
-void	add_cmd(t_cmd **head, t_cmd *cmd)
+t_cmd	*create_cmd_list(char *line)
 {
-	t_cmd	*tmp;
-
-	if (!cmd)
-		return ;
-	if (!*head)
-	{
-		*head = cmd;
-		(*head)->next = NULL;
-	}
-	else
-	{
-		tmp = *head;
-		while (tmp->next)
-			tmp = tmp->next;
-		tmp->next = cmd;
-		tmp->next->next = NULL;
-	}
-}
-
-char	*find_path(char **env)
-{
-	int	i;
-
-	i = 0;
-	while (env[i])
-	{
-		if (ft_strncmp(env[i], "PATH=", 5) == 0)
-			return (env[i] + 5);
-		i++;
-	}
-	return (NULL);
-}
-
-char	*find_cmd(char *cmd, char **env)
-{
-	char	*path;
-	char	**paths;
-	char	*tmp;
+	t_cmd	*cmd;
+	t_cmd	*head;
+	char	**pipes;
 	int		i;
 
 	i = 0;
-	path = find_path(env);
-	if (!path)
-		return (NULL);
-	paths = ft_split(path, ':');
-	while (paths[i])
+	pipes = split_by_pipes(&line);
+	cmd = init_cmd(pipes[i]);
+	head = cmd;
+	while (pipes[++i])
 	{
-		tmp = ft_strjoin(paths[i], "/");
-		tmp = ft_strjoin(tmp, cmd);
-		if (access(tmp, X_OK) == 0)
-			return (tmp);
-		i++;
+		cmd->next = init_cmd(pipes[i]);
+		cmd = cmd->next;
 	}
-	return (NULL);
+	return (head);
 }
-
-t_cmd	*parse(char *input, char **env)
-{
-	t_cmd	*cmd;
-	char	*path;
-
-	cmd = parse_cmd(input);
-	if (!cmd)
-		return (NULL);
-	path = find_cmd(cmd->args[0], get_env(env));
-	if (path)
-	{
-		free(cmd->args[0]);
-		cmd->args[0] = path;
-	}
-	return (cmd);
-}
-
-//void	execute(t_cmd *cmd)
-//{
-//	pid_t	pid;
-//	int		status;
-
-//	pid = fork();
-//	if (pid == 0)
-//	{
-//		if (execve(cmd->args[0], cmd->args, NULL) == -1)
-//			printf("error\n");
-//	}
-//	else
-//	{
-//		waitpid(pid, &status, 0);
-//	}
-//}
-
-//int	main(int argc, char **argv, char **env)
-//{
-//	char	*input;
-//	t_cmd	*cmd;
-//	t_cmd	*head;
-
-//	(void)argc;
-//	(void)argv;
-//	head = NULL;
-//	while (1)
-//	{
-//		input = readline(KRED"minishell$ "KWHT);
-//		if (!input)
-//			break ;
-//		add_history(input);
-//		cmd = parse(input, env);
-//		add_cmd(&head, cmd);
-//		while (head)
-//		{
-//			execute(head);
-//			head = head->next;
-//		}
-//	}
-//}
