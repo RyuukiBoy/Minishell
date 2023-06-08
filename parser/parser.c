@@ -5,66 +5,12 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: oait-bad <oait-bad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/06/01 00:27:19 by oait-bad          #+#    #+#             */
-/*   Updated: 2023/06/05 22:43:50 by oait-bad         ###   ########.fr       */
+/*   Created: 2023/06/06 10:03:30 by oait-bad          #+#    #+#             */
+/*   Updated: 2023/06/08 11:45:45 by oait-bad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
-
-int		is_between_quotes(char *str)
-{
-	int		single;
-	int		doubleq;
-	int		i;
-
-	i = ft_strlen(str) - 1;
-	single = 0;
-	doubleq = 0;
-	while (i >= 0)
-	{
-		if (str[i] == '\'')
-			single++;
-		if (str[i] == '\"')
-			doubleq++;
-		i--;
-	}
-	if (single % 2 == 0 && doubleq % 2 == 0)
-		return (0);
-	return (1);
-}
-
-char	**split_by_pipes(char **input)
-{
-	char	**pipes;
-	int		i;
-	int		j;
-	int		k;
-
-	i = 0;
-	j = 0;
-	k = 0;
-	pipes = (char **)malloc(sizeof(char *) * (ft_strlen(*input) + 1));
-	while ((*input)[i])
-	{
-		if ((*input)[i] == '\'' || (*input)[i] == '\"')
-		{
-			i++;
-			while ((*input)[i] && (*input)[i] != '\'' && (*input)[i] != '\"')
-				i++;
-		}
-		if ((*input)[i] == '|')
-		{
-			pipes[j] = ft_substr(*input, k, i - k);
-			k = i + 1;
-			j++;
-		}
-		i++;
-	}
-	pipes[j] = ft_substr(*input, k, i - k);
-	pipes[j + 1] = NULL;
-	return (pipes);
-}
 
 t_cmd	*init_cmd(char *line)
 {
@@ -79,6 +25,12 @@ t_cmd	*init_cmd(char *line)
 	return (cmd);
 }
 
+void	skip_whitespaces(char *str)
+{
+	if (*str == 32 && (*str >= 9 && *str <= 13))
+		str++;
+}
+
 t_cmd	*create_cmd_list(char *line)
 {
 	t_cmd	*cmd;
@@ -88,6 +40,7 @@ t_cmd	*create_cmd_list(char *line)
 
 	i = 0;
 	pipes = split_by_pipes(&line);
+	skip_whitespaces(line);
 	cmd = init_cmd(pipes[i]);
 	head = cmd;
 	while (pipes[++i])
@@ -96,4 +49,25 @@ t_cmd	*create_cmd_list(char *line)
 		cmd = cmd->next;
 	}
 	return (head);
+}
+
+
+
+// main function to test this file in a loop using readline
+
+int main()
+{
+	char *line;
+	t_cmd *cmd;
+	while (1)
+	{
+		line = readline("minishell$ ");
+		cmd = create_cmd_list(line);
+		while (cmd)
+		{
+			printf("cmd->input = %s\n", cmd->input);
+			cmd = cmd->next;
+		}
+	}
+	return (0);
 }

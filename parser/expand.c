@@ -6,7 +6,7 @@
 /*   By: oait-bad <oait-bad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/22 11:39:05 by oait-bad          #+#    #+#             */
-/*   Updated: 2023/06/01 00:43:21 by oait-bad         ###   ########.fr       */
+/*   Updated: 2023/06/05 09:53:40 by oait-bad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,35 +82,34 @@ char	*get_env_key(char *input)
 	return (key);
 }
 
-char	**dollar_sign(char **args, char **env)
-{
-	int		i;
-	int		j;
-	char	*key;
-	char	*value;
-	char	*tmp;
+//char	**dollar_sign(char **args, char **env)
+//{
+//	int		i;
+//	int		j;
+//	char	*key;
+//	char	*value;
+//	char	*tmp;
 
-	i = 0;
-	j = 0;
-	while (args[i])
-	{
-		if (*args[i] == '$')
-		{
-			args[i] = expand_inside_quotes(args[i]);
-			key = get_env_key(args[i] + 1);
-			value = get_env_value(key, env);
-			if (value == NULL)
-				value = ft_strdup("");
-			tmp = ft_strjoin(value, args[i] + ft_strlen(key) + 1);
-			free(args[i]);
-			args[i] = tmp;
-			free(key);
-			free(value);
-		}
-		i++;
-	}
-	return (args);
-}
+//	i = 0;
+//	j = 0;
+//	while (args[i])
+//	{
+//		if (*args[i] == '$')
+//		{
+//			key = get_env_key(args[i] + 1);
+//			value = get_env_value(key, env);
+//			if (value == NULL)
+//				value = ft_strdup("");
+//			tmp = ft_strjoin(value, args[i] + ft_strlen(key) + 1);
+//			free(args[i]);
+//			args[i] = tmp;
+//			free(key);
+//			free(value);
+//		}
+//		i++;
+//	}
+//	return (args);
+//}
 
 //int main(int argc, char **argv, char **env)
 //{

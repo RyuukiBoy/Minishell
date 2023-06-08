@@ -6,33 +6,33 @@
 /*   By: oait-bad <oait-bad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 14:44:04 by oait-bad          #+#    #+#             */
-/*   Updated: 2023/05/31 15:26:42 by oait-bad         ###   ########.fr       */
+/*   Updated: 2023/06/01 13:54:18 by oait-bad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-char	*delete_quotes(char *str)
-{
-	int		i;
-	int		j;
-	char	*new;
+//char	*delete_quotes(char *str)
+//{
+//	int		i;
+//	int		j;
+//	char	*new;
 
-	i = 0;
-	j = 0;
-	new = (char *)malloc(sizeof(char) * (ft_strlen(str) + 1));
-	while (str[i])
-	{
-		if (str[i] != '\'' && str[i] != '\"')
-		{
-			new[j] = str[i];
-			j++;
-		}
-		i++;
-	}
-	new[j] = '\0';
-	return (new);
-}
+//	i = 0;
+//	j = 0;
+//	new = (char *)malloc(sizeof(char) * (ft_strlen(str) + 1));
+//	while (str[i])
+//	{
+//		if (str[i] != '\'' && str[i] != '\"')
+//		{
+//			new[j] = str[i];
+//			j++;
+//		}
+//		i++;
+//	}
+//	new[j] = '\0';
+//	return (new);
+//}
 
 // expand inside quotes
 

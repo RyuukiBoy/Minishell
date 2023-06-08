@@ -6,7 +6,7 @@
 /*   By: oait-bad <oait-bad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 01:34:48 by oait-bad          #+#    #+#             */
-/*   Updated: 2023/05/31 12:13:45 by oait-bad         ###   ########.fr       */
+/*   Updated: 2023/06/02 20:59:53 by oait-bad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,12 @@ int	node_init(t_lexer **token)
 	(*token)->value = 0;
 	(*token)->next = 0;
 	return (1);
+}
+
+int ft_isalnum1(char c)
+{
+	return ((c >= '0' && c <= '9') || (c >= 'A' && c <= 'Z') ||
+			(c >= 'a' && c <= 'z'));
 }
 
 int	check_tokens(t_lexer *lexer, t_lexer **token)
