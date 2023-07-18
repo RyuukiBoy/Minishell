@@ -6,7 +6,7 @@
 /*   By: oait-bad <oait-bad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/08 16:37:31 by oait-bad          #+#    #+#             */
-/*   Updated: 2023/07/18 01:38:34 by oait-bad         ###   ########.fr       */
+/*   Updated: 2023/07/18 08:00:33 by oait-bad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,7 @@ typedef struct s_cmd
 }				t_cmd;
 
 int	g_exit_status;
+
 //int	check_tokens(t_lexer *lexer, t_lexer **token);
 //int	check_quotes(t_lexer *lexer, t_lexer **token);
 //t_lexer	*the_lexer(char *input);
