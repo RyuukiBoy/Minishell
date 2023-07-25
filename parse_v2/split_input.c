@@ -6,7 +6,7 @@
 /*   By: oait-bad <oait-bad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/11 01:18:40 by oait-bad          #+#    #+#             */
-/*   Updated: 2023/07/23 14:23:08 by oait-bad         ###   ########.fr       */
+/*   Updated: 2023/07/25 16:33:17 by oait-bad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,4 +96,31 @@ char	**split_pipes(char *str)
 	}
 	pipes[j] = NULL;
 	return (pipes);
+}
+
+char	***split_cmds(char *str)
+{
+	char	***cmds;
+	char	**pipes;
+	int		i;
+	int		j;
+	int		pipe_counter;
+
+	pipe_counter = count_pipes(str);
+	cmds = (char ***)malloc(sizeof(char **) * (pipe_counter + 2));
+	if (cmds == NULL)
+		return (NULL);
+	i = 0;
+	j = 0;
+	pipes = split_pipes(str);
+	while (pipes[i])
+	{
+		cmds[j++] = split_args(pipes[i]);
+		i++;
+	}
+	cmds[j] = NULL;
+	while (i < pipe_counter + 1)
+		free(pipes[i++]);
+	free(pipes);
+	return (cmds);
 }
