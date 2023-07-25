@@ -6,7 +6,7 @@
 /*   By: oait-bad <oait-bad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/11 01:55:13 by oait-bad          #+#    #+#             */
-/*   Updated: 2023/07/17 09:44:52 by oait-bad         ###   ########.fr       */
+/*   Updated: 2023/07/25 13:34:14 by oait-bad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,14 @@
 
 void	define_operators(char *cmd, int *type, int i)
 {
+	int	j;
+
+	j = 0;
 	if (cmd[0] == '|')
 		type[i] = PIPE;
-	else if (ft_strlen(cmd) > 1 && cmd[0] == '<')
+	else if (ft_strlen(cmd) > 1 && (cmd[j] == '<' && cmd[j + 1] == '<'))
 		type[i] = HEREDOC_SIG;
-	else if (ft_strlen(cmd) > 1 && cmd[0] == '>')
+	else if (ft_strlen(cmd) > 1 && (cmd[j] == '>' && cmd[j + 1] == '>'))
 		type[i] = R_APP_SIG;
 	else if (cmd[0] == '<')
 		type[i] = R_IN_SIG;
@@ -54,8 +57,8 @@ int	ft_array_size(char **cmd)
 
 int	*get_tokens(char **cmd)
 {
-	int	*type;
-	int	i;
+	int		*type;
+	int		i;
 
 	i = 0;
 	type = ft_calloc(ft_array_size(cmd) + 1, sizeof(int));
@@ -77,20 +80,22 @@ int	*get_tokens(char **cmd)
 //	char	**cmd;
 //	int		*type;
 //	int		i;
-	
-//	i = 0;
+
+//	type = malloc(sizeof(int));
+//	cmd = malloc(sizeof(char *));
 //	while (1)
 //	{
+//		i = 0;
 //		line = readline("minishell$ ");
 //		if (!line)
 //			break ;
-//		cmd = split_args(line);
+//		add_history(line);
+//		cmd = split_args(add_spaces(line));
 //		type = get_tokens(cmd);
 //		while (cmd[i])
 //		{
 //			printf("cmd[%d] = %s\n", i, cmd[i]);
 //			printf("type[%d] = %d\n", i, type[i]);
-//			printf("____________________\n");
 //			i++;
 //		}
 //	}

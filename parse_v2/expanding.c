@@ -6,11 +6,36 @@
 /*   By: oait-bad <oait-bad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/15 01:24:37 by oait-bad          #+#    #+#             */
-/*   Updated: 2023/07/18 01:52:29 by oait-bad         ###   ########.fr       */
+/*   Updated: 2023/07/24 11:30:33 by oait-bad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+
+//int	is_special_char(char *str)
+//{
+//	if (str[0] == '$' || str[0] == '\\' || str[0] == '=' || str[0] == '.'
+//		|| str[0] == '%')
+//}
+
+char	*get_env_key(char *input)
+{
+	int		i;
+	char	*key;
+
+	i = 0;
+	while (input[i] && input[i] != '=')
+		i++;
+	key = (char *)malloc(sizeof(char) * (i + 1));
+	i = 0;
+	while (input[i] && input[i] != '=')
+	{
+		key[i] = input[i];
+		i++;
+	}
+	key[i] = '\0';
+	return (key);
+}
 
 char	*get_env_value(char *key, char **env)
 {
@@ -34,25 +59,6 @@ char	*get_env_value(char *key, char **env)
 		i++;
 	}
 	return (0);
-}
-
-char	*get_env_key(char *input)
-{
-	int		i;
-	char	*key;
-
-	i = 0;
-	while (input[i] && input[i] != '=')
-		i++;
-	key = (char *)malloc(sizeof(char) * (i + 1));
-	i = 0;
-	while (input[i] && input[i] != '=')
-	{
-		key[i] = input[i];
-		i++;
-	}
-	key[i] = '\0';
-	return (key);
 }
 
 void	expand(char **args, char **env, int i, int j)
@@ -117,28 +123,28 @@ char	**dollar_sign(char **args, char **env)
 	return (args);
 }
 
-int main(int argc, char **argv, char **env)
-{
-	char	*line;
-	char	**args;
-	int		i;
-	//int		j;
+//int	main(int argc, char **argv, char **env)
+//{
+//	char	*line;
+//	char	**args;
+//	int		i;
 
-	(void)argc;
-	(void)argv;
-	while (1)
-	{
-		line = readline("minishell$ ");
-		if (!line)
-			break ;
-		args = dollar_sign(split_args(line), env);
-		i = 0;
-		while (args[i])
-		{
-			printf("%s\n", delete_quotes(args[i]));
-			i++;
-		}
-		free(line);
-		free(args);
-	}
-}
+//	(void)argc;
+//	(void)argv;
+//	while (1)
+//	{
+//		line = readline("minishell$ ");
+//		if (!line)
+//			break ;
+//		add_history(line);
+//		args = dollar_sign(split_args(line), env);
+//		i = 0;
+//		while (args[i])
+//		{
+//			printf("%s\n", delete_quotes(args[i]));
+//			i++;
+//		}
+//		free(line);
+//		free(args);
+//	}
+//}

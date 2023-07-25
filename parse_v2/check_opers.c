@@ -6,7 +6,7 @@
 /*   By: oait-bad <oait-bad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/11 01:38:02 by oait-bad          #+#    #+#             */
-/*   Updated: 2023/07/15 00:44:50 by oait-bad         ###   ########.fr       */
+/*   Updated: 2023/07/25 13:13:43 by oait-bad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,36 +44,28 @@ int	check_last_pipe(int *arr)
 	return (1);
 }
 
-int	check_op(int *arr)
+int	check_op(char *arr)
 {
 	int	i;
-	int	flag;
 
 	i = 0;
-	flag = 0;
-	while (arr[i])
+	if ((arr[i] == '<' || arr[i] == '>' || arr[i] == '|')
+		&& (arr[i + 1] == ' ' || arr[i + 1] == '\t'))
 	{
-		if (arr[i] == HEREDOC_SIG && arr[i + 1] != HEREDOC_LIM)
-			flag = 1;
-		else if (arr[i] == R_IN_SIG && arr[i + 1] != R_IN_FILE)
-			flag = 1;
-		else if (arr[i] == R_OUT_SIG && arr[i + 1] != R_OUT_FILE)
-			flag = 1;
-		else if (arr[i] == R_APP_SIG && arr[i + 1] != R_APP_FILE)
-			flag = 1;
+		i = skip_whitespaces(arr, i);
+		if (arr[i] == '<' || arr[i] == '>' || arr[i] == '|')
+		{
+			printf("minishell: syntax error near unexpected token\n");
+			return (0);
+		}
 		i++;
-	}
-	if (flag)
-	{
-		printf("minishell: syntax error near unexpected token\n");
-		return (0);
 	}
 	return (1);
 }
 
 int	check_all_opers(int *arr)
 {
-	if (check_pipes(arr) || check_last_pipe(arr) || check_op(arr))
+	if (check_pipes(arr) == 1 || check_last_pipe(arr) == 0)
 		return (0);
 	return (1);
 }

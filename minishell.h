@@ -6,7 +6,7 @@
 /*   By: oait-bad <oait-bad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/08 16:37:31 by oait-bad          #+#    #+#             */
-/*   Updated: 2023/07/18 08:00:33 by oait-bad         ###   ########.fr       */
+/*   Updated: 2023/07/25 13:32:53 by oait-bad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,6 @@ typedef enum e_type
 	R_APP_FILE,
 	HEREDOC_SIG,
 	HEREDOC_LIM,
-	EMPTY,
 }			t_type;
 
 typedef struct s_exp
@@ -53,6 +52,13 @@ typedef struct s_exp
 	char			*tmp;
 	char			*all_cmd;
 }			t_exp;
+
+typedef struct s_token
+{
+	char			*cmd;
+	int				type;
+	struct s_token	*next;
+}				t_token;
 
 typedef struct s_env
 {
@@ -77,7 +83,7 @@ typedef struct s_cmd
 	struct s_cmd	*next;
 }				t_cmd;
 
-int	g_exit_status;
+int g_exit_status;
 
 //int	check_tokens(t_lexer *lexer, t_lexer **token);
 //int	check_quotes(t_lexer *lexer, t_lexer **token);
@@ -98,6 +104,9 @@ char	*delete_quotes(char *str);
 char	**split_args(char *str);
 int	count_args(char *str);
 int	check_all_opers(int *arr);
-bool	in_quotes(char *str, int i);
+char	*add_spaces(char *str);
+char	**split_pipes(char *str);
+int		skip_whitespaces(char *str, int i);
+int		check_op(char *arr);
 
 #endif
