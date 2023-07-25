@@ -6,7 +6,7 @@
 /*   By: oait-bad <oait-bad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/08 16:37:31 by oait-bad          #+#    #+#             */
-/*   Updated: 2023/07/25 13:32:53 by oait-bad         ###   ########.fr       */
+/*   Updated: 2023/07/25 13:37:17 by oait-bad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,13 +52,6 @@ typedef struct s_exp
 	char			*tmp;
 	char			*all_cmd;
 }			t_exp;
-
-typedef struct s_token
-{
-	char			*cmd;
-	int				type;
-	struct s_token	*next;
-}				t_token;
 
 typedef struct s_env
 {
