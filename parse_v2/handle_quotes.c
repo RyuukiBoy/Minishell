@@ -6,7 +6,7 @@
 /*   By: oait-bad <oait-bad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 14:44:04 by oait-bad          #+#    #+#             */
-/*   Updated: 2023/07/17 06:22:06 by oait-bad         ###   ########.fr       */
+/*   Updated: 2023/07/26 13:02:06 by oait-bad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ int	check_unclosed_quotes(char *str)
 	}
 	if (single % 2 != 0 || doubleq % 2 != 0)
 	{
-		printf("minishell: unclosed quotes");
+		printf("minishell: unclosed quotes\n");
 		return (0);
 	}
 	return (1);
@@ -50,19 +50,19 @@ char	*delete_quotes(char *str)
 	if ((str[0] == '\'' && str[ft_strlen(str) - 1] != '\'')
 		|| (str[0] == '\"' && str[ft_strlen(str) - 1] != '\"'))
 	{
-		flag = 1;
+		flag = 0;
 		i++;
 	}
 	new = malloc(ft_strlen(str) + 1);
 	while (str[i])
 	{
-		if (str[i] == '\'' && flag == 0)
+		if (str[i] == '\"' && flag == 0)
 			flag = 1;
-		else if (str[i] == '\'' && flag == 1)
+		else if (str[i] == '\"' && flag == 1)
 			flag = 0;
-		else if (str[i] == '\"' && flag == 0)
+		else if (str[i] == '\'' && flag == 0)
 			flag = 2;
-		else if (str[i] == '\"' && flag == 2)
+		else if (str[i] == '\'' && flag == 2)
 			flag = 0;
 		else
 			new[j++] = str[i];

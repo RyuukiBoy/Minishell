@@ -6,7 +6,7 @@
 /*   By: oait-bad <oait-bad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/08 16:37:31 by oait-bad          #+#    #+#             */
-/*   Updated: 2023/07/25 13:37:17 by oait-bad         ###   ########.fr       */
+/*   Updated: 2023/07/27 13:49:21 by oait-bad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 # include <stdlib.h>
 # include <errno.h>
 # include <string.h>
-# include <stdbool.h>
+# include <errno.h>
 # include <readline/readline.h>
 # include <readline/history.h>
 # include "libft/libft.h"
@@ -52,6 +52,14 @@ typedef struct s_exp
 	char			*tmp;
 	char			*all_cmd;
 }			t_exp;
+
+typedef struct s_file
+{
+	int		fd1;
+	int		fd2;
+	int		fd3;
+	char	*file;
+}			t_file;
 
 typedef struct s_env
 {
@@ -101,5 +109,9 @@ char	*add_spaces(char *str);
 char	**split_pipes(char *str);
 int		skip_whitespaces(char *str, int i);
 int		check_op(char *arr);
+char	**dollar_sign(char **args, char **env);
+int	*get_tokens(char **cmd);
+int	check_pipes(int *arr);
+int	check_last_pipe(int *arr);
 
 #endif
