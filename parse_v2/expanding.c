@@ -6,17 +6,11 @@
 /*   By: oait-bad <oait-bad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/15 01:24:37 by oait-bad          #+#    #+#             */
-/*   Updated: 2023/07/24 11:30:33 by oait-bad         ###   ########.fr       */
+/*   Updated: 2023/08/03 10:07:56 by oait-bad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
-
-//int	is_special_char(char *str)
-//{
-//	if (str[0] == '$' || str[0] == '\\' || str[0] == '=' || str[0] == '.'
-//		|| str[0] == '%')
-//}
 
 char	*get_env_key(char *input)
 {
@@ -61,7 +55,7 @@ char	*get_env_value(char *key, char **env)
 	return (0);
 }
 
-void	expand(char **args, char **env, int i, int j)
+void	apply_expander(char **args, char **env, int i, int j)
 {
 	t_exp	*exp;
 
@@ -69,23 +63,29 @@ void	expand(char **args, char **env, int i, int j)
 	exp->before = ft_substr(args[i], 0, ft_strchr(args[i], '$') - args[i]);
 	while (args[i][j] && args[i][j] != '$')
 		j++;
-	exp->start = ++j;
 	while (args[i][j] && (ft_isalnum(args[i][j]) || args[i][j] == '_'))
 		j++;
-	exp->end = j;
-	exp->key = ft_substr(args[i], exp->start, exp->end - exp->start);
-	exp->value = get_env_value(exp->key, env);
-	if (!exp->value)
-		exp->value = ft_strdup("");
-	free(exp->key);
-	exp->after = ft_substr(args[i], exp->end, ft_strlen(args[i]) - exp->end);
-	exp->tmp = ft_strjoin(exp->before, exp->value);
-	exp->all_cmd = ft_strjoin(exp->tmp, exp->after);
-	free(args[i]);
-	args[i] = exp->all_cmd;
-	free(exp->tmp);
-	free(exp->before);
-	free(exp->after);
+	if (args[i][j] == '$')
+	{
+		exp->start = ++j;
+		while (args[i][j] && (ft_isalnum(args[i][j]) || args[i][j] == '_'))
+			j++;
+		exp->end = j;
+		exp->key = ft_substr(args[i], exp->start, exp->end - exp->start);
+		exp->value = get_env_value(exp->key, env);
+		if (!exp->value)
+			exp->value = ft_strdup("");
+		free(exp->key);
+		exp->after = ft_substr(args[i], exp->end, ft_strlen(args[i]) - exp->end);
+		exp->tmp = ft_strjoin(exp->before, exp->value);
+		exp->all_cmd = ft_strjoin(exp->tmp, exp->after);
+		free(args[i]);
+		args[i] = exp->all_cmd;
+		free(exp->tmp);
+		free(exp->before);
+		free(exp->after);
+		apply_expander(args, env, i, 0);
+	}
 }
 
 char	**dollar_sign(char **args, char **env)
@@ -115,8 +115,7 @@ char	**dollar_sign(char **args, char **env)
 				free(args[i]);
 				args[i] = exp->all_cmd;
 			}
-			else
-				expand(args, env, i, j);
+			apply_expander(args, env, i, j);
 		}
 		i++;
 	}

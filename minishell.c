@@ -6,42 +6,38 @@
 /*   By: oait-bad <oait-bad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/08 16:37:28 by oait-bad          #+#    #+#             */
-/*   Updated: 2023/07/06 13:38:54 by oait-bad         ###   ########.fr       */
+/*   Updated: 2023/08/04 09:13:22 by oait-bad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-//int	main(int argc, char **argv, char **env)
-//{
-//	char	*line;
-//	t_lexer	*lexer;
-//	t_lexer	*token;
-//	//t_env	*envp;
-//	//int		i;
-//	//int		j;
+int main(int argc, char **argv, char **env)
+{
+	char	*line;
+	char	**cmd;
+	t_env	*new_env;
+	t_env	*head;
+	t_builtin	*arr;
 
-//	(void)argc;
-//	(void)argv;
-//	(void)env;
-//	lexer = (t_lexer *)malloc(sizeof(t_lexer));
-//	while (1)
-//	{
-//		line = readline("minishell$ ");
-//		if (!line)
-//			break ;
-//		lexer->input = line;
-//		lexer->i = 0;
-//		lexer->tokens = 0;
-//		lexer->current_token = 0;
-//		token = the_lexer(line);
-//		token = lexer->tokens;
-//		while (token)
-//		{
-//			printf("type: %d\n", token->type);
-//			printf("value: %s\n", token->value);
-//			token = token->next;
-//		}
-//	}
-//	return (0);
-//}
+	check_av_ac(argc, argv);
+	cmd = malloc(sizeof(char *));
+	arr = (t_builtin *)malloc(sizeof(t_builtin));
+	head = NULL;
+	new_env = builtin_env(env, arr, head);
+	while (1)
+	{
+		line = readline(KRED"minishell$ "KWHT);
+		if (!line)
+			break ;
+		add_history(line);
+		if (parse(line))
+		{
+			arr->d = 0;
+			cmd = ft_split(add_spaces(line), '|');
+			check_cmd(cmd, arr, new_env);
+			arr->d++;
+		}
+		free(line);
+	}
+}

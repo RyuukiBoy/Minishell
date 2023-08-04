@@ -6,7 +6,7 @@
 /*   By: oait-bad <oait-bad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/11 01:55:13 by oait-bad          #+#    #+#             */
-/*   Updated: 2023/07/27 14:42:39 by oait-bad         ###   ########.fr       */
+/*   Updated: 2023/08/04 08:53:14 by oait-bad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,38 +67,7 @@ int	*get_tokens(char **cmd)
 	while (cmd && cmd[i])
 	{
 		check_after_op(cmd, type, i);
-		if (check_op(cmd[i]))
-			break ;
 		i++;
 	}
-	if (!check_pipes(type) || !check_last_pipe(type))
-		return (type);
 	return (type);
 }
-
-//int main()
-//{
-//	char	*line;
-//	char	**cmd;
-//	int		*type;
-//	int		i;
-
-//	type = malloc(sizeof(int));
-//	cmd = malloc(sizeof(char *));
-//	while (1)
-//	{
-//		i = 0;
-//		line = readline("minishell$ ");
-//		if (!line)
-//			break ;
-//		add_history(line);
-//		cmd = split_args(add_spaces(delete_quotes(line)));
-//		type = get_tokens(cmd);
-//		while (cmd[i])
-//		{
-//			printf("cmd[%d] = %s\n", i, cmd[i]);
-//			printf("type[%d] = %d\n", i, type[i]);
-//			i++;
-//		}
-//	}
-//}
