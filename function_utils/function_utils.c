@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   fucntion_utils.c                                   :+:      :+:    :+:   */
+/*   function_utils.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ybargach <ybargach@student.42.fr>          +#+  +:+       +#+        */
+/*   By: oait-bad <oait-bad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/26 17:14:37 by ybargach          #+#    #+#             */
-/*   Updated: 2023/07/28 11:52:52 by ybargach         ###   ########.fr       */
+/*   Updated: 2023/08/08 15:24:47 by oait-bad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,16 +17,24 @@ int	ft_strcmp(char *s1, char *s2)
 	int	a;
 
 	a = 0;
+	if (s1[a] == '\0' && s2[a] == '\0')
+		return (0);
+	else if (s1[a] == '\0' && s2)
+		return (-1);
+	else if (s1 && s2[a] == '\0')
+		return (1);
 	while (s1[a] || s2[a])
 	{
-		if (!((unsigned char)s1[a] == (unsigned char)s2[a]))
+		if ((unsigned char)s1[a] != (unsigned char)s2[a])
+		{
 			return ((unsigned char)s1[a] - (unsigned char)s2[a]);
+		}
 		a++;
 	}
 	return (0);
 }
 
-int	ft_strncmp(const char *s1, const char *s2, int n)
+int	ft_strncmp(const char *s1, const char *s2, size_t n)
 {
 	int	a;
 
@@ -40,49 +48,52 @@ int	ft_strncmp(const char *s1, const char *s2, int n)
 	return (0);
 }
 
-void	check_first_qoutes(char **cmd, int b, t_builtin *arr)
+int	check_first_qoutes(char *cmd, t_builtin *arr)
 {
-	if ((cmd[arr->i][arr->j] == '"') || (cmd[arr->i][arr->j] == '\''))
-	{
-			printf("here%c\n", cmd[arr->i][arr->j + 1]);
-		if(cmd[arr->i][arr->j + 1] == ' ' || cmd[arr->i][arr->j + 1] == '\t')
-		{
-			printf("%s: command not found\n", cmd[arr->c]);
-			exit(127);
-		}
-		b++;
-	}
+	arr->move_b++;
+	while (cmd[arr->move_b] != '\"' && cmd[arr->move_b] != '\0')
+		arr->move_b++;
+	return (arr->move_b);
 }
 
-void	check_last_qoutes(char **cmd, int c, t_builtin *arr)
+int	check_last_qoutes(char *cmd, t_builtin *arr)
 {
-	if((cmd[arr->i][arr->j] == '"') || (cmd[arr->i][arr->j] == '\''))
-	{
-		if (cmd[arr->i][arr->j - 1] == ' ')
-		{
-			printf("%s: command not found\n", cmd[arr->c]);
-			exit(127);
-		}
-		c++;
-	}
+	arr->move_b++;
+	while (cmd[arr->move_b] != '\'' && cmd[arr->move_b] != '\0')
+		arr->move_b++;
+	return (arr->move_b);
 }
 
-void	check_qoutes(char *cmd, t_builtin *arr)
+int	check_qoutes(char *cmd, t_builtin *arr)
 {
-	int	b;
-	int	c;
+	if (cmd[arr->move_b] == '\"')
+		arr->move_b = check_first_qoutes(cmd, arr);
+	else if (cmd[arr->move_b] == '\'')
+		arr->move_b = check_last_qoutes(cmd, arr);
+	return (arr->move_b);
+}
 
-	b = 0;
-	c = 0;
-	arr->i = 0;
-	while (cmd[arr->i])
-	{
+int	check_first_qoutes_red(char *cmd, t_builtin *arr)
+{
+	arr->str_b++;
+	while (cmd[arr->str_b] != '\"' && cmd[arr->str_b] != '\0')
+		arr->str_b++;
+	return (arr->str_b);
+}
 
-		if (cmd[arr->i] == ' ')
-		{
-			printf("%s: command not found\n", cmd);
-			exit(127);
-		}
-		arr->i++;
-	}
+int	check_last_qoutes_red(char *cmd, t_builtin *arr)
+{
+	arr->str_b++;
+	while (cmd[arr->str_b] != '\'' && cmd[arr->str_b] != '\0')
+		arr->str_b++;
+	return (arr->str_b);
+}
+
+int	check_qoutes_red(char *cmd, t_builtin *arr)
+{
+	if (cmd[arr->str_b] == '\"')
+		arr->str_b = check_first_qoutes_red(cmd, arr);
+	else if (cmd[arr->str_b] == '\'')
+		arr->str_b = check_last_qoutes_red(cmd, arr);
+	return (arr->str_b);
 }

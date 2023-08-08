@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_env.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ybargach <ybargach@student.42.fr>          +#+  +:+       +#+        */
+/*   By: oait-bad <oait-bad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/11 14:16:01 by ybargach          #+#    #+#             */
-/*   Updated: 2023/08/03 13:39:13 by ybargach         ###   ########.fr       */
+/*   Updated: 2023/08/08 15:20:22 by oait-bad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 t_env	*add_env(char *name, char *value)
 {
 	t_env	*new_env;
-
 	new_env = (t_env *)malloc(sizeof(t_env));
 	new_env->name = ft_strdup(name);
 	new_env->value = ft_strdup(value);
@@ -52,6 +51,11 @@ void	print_env(t_env *head)
 {
 	t_env	*env;
 
+	if (head == NULL)
+	{
+		printf("minishell: env: No such file or directory\n");
+		//exit_value = 127;
+	}
 	env = head;
 	while (env != NULL)
 	{
@@ -64,36 +68,28 @@ void	print_env(t_env *head)
 	}
 }
 
-t_env	*builtin_env(char **env, t_builtin *arr, t_env *head)
+t_env	*env_null(t_builtin *arr, t_env *head)
 {
-	if (*env == NULL)
-	{	
-		arr->a = 0;
-		while (env[arr->a])
-		{
-		dprintf(2, "here\n");
-			if (ft_strncmp("PATH", env[arr->a], 4) == 0)
-			{
-				arr->b = 0;
-				while (env[arr->a][arr->b])
-				{
-					dprintf(2, "here\n");
-					if (env[arr->a][arr->b] == '=')
-					{
-						dprintf(2, "here\n");
-						arr->name = ft_substr(env[arr->a], 0, arr->b + 1);
-						arr->value = ft_strdup(env[arr->a] + arr->b + 1);
-						add_back(&head, arr->name, arr->value);
-						break ;
-					}
-					arr->b++;
-				}
-			}
-			arr->a++;
-		}
-		return (head);
-	}
+	char	pwd[1024];
+
+	getcwd(pwd, 1024);
+	arr->value = ft_strdup("/Users/ybargach/Desktop/minishell_v2/./minishell");
+	add_back(&head, "_=", arr->value);
+	free(arr->value);
+	arr->value = ft_strdup(pwd);
+	add_back(&head, "PWD=", arr->value);
+	free(arr->value);
+	arr->value = ft_strdup("1");
+	add_back(&head, "SHLVL=", arr->value);
+	free(arr->value);
+	return (head);
+}
+
+t_env	*builtin_env(char **env, t_builtin *arr, t_env **head)
+{
 	arr->a = 0;
+	if (*env == NULL || env == NULL)
+		return (env_null(arr, *head));
 	while (env[arr->a])
 	{
 		arr->b = 0;
@@ -103,12 +99,17 @@ t_env	*builtin_env(char **env, t_builtin *arr, t_env *head)
 			{
 				arr->name = ft_substr(env[arr->a], 0, arr->b + 1);
 				arr->value = ft_strdup(env[arr->a] + arr->b + 1);
-				add_back(&head, arr->name, arr->value);
+				add_back(head, arr->name, arr->value);
 				break ;
 			}
 			arr->b++;
 		}
 		arr->a++;
 	}
-	return (head);
+	if (*head == NULL || head == NULL)
+	{
+		printf("minishell: %s: No such file or directory\n", env[0]);
+		//exit_value = 127;
+	}
+	return (*head);
 }

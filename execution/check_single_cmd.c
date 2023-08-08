@@ -6,7 +6,7 @@
 /*   By: ybargach <ybargach@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/14 10:45:08 by ybargach          #+#    #+#             */
-/*   Updated: 2023/08/03 10:17:36 by ybargach         ###   ########.fr       */
+/*   Updated: 2023/08/06 11:56:56 by ybargach         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,21 +19,24 @@ char	**put_env_array(t_env **new_env, t_builtin *arr, int space)
 
 	new_list = (*new_env);
 	arr->a = 0;
-	env = malloc(sizeof(char *) * space);
+	env = malloc(sizeof(char *) * (space + 1));
 	while (new_list != NULL)
 	{
 		env[arr->a] = ft_strjoin(new_list->name, new_list->value);
 		arr->a++;
 		new_list = new_list->next;
 	}
+	env[arr->a] = NULL;
 	return (env);
 }
 
-int	size_list(t_env **new_env, t_builtin *arr)
+int	size_list(t_env *new_env, t_builtin *arr)
 {
 	t_env	*size;
 
-	size = *new_env;
+	if (new_env == NULL)
+		return (0);
+	size = new_env;
 	arr->a = 0;
 	while (size != NULL)
 	{
@@ -74,17 +77,24 @@ char	**check_env_path(t_env **new_env, t_builtin *arr)
 {
 	t_env	*env;
 
+	if (*new_env == NULL || new_env == NULL)
+		return (NULL);
 	env = (*new_env);
 	arr->a = 0;
-	while (env)
+	arr->path1 = NULL;
+	arr->path2 = NULL;
+	while (env != NULL)
 	{
-		if (ft_strncmp(env->name, "PATH=", 5) == 0)
+		if (ft_strcmp(env->name, "PATH=") == 0)
 		{
 			arr->path1 = env->name;
 			arr->path2 = env->value;
+			break ;
 		}
 		env = env->next;
 	}
+	if (arr->path1 == NULL || arr->path2 == NULL)
+		return (NULL);
 	arr->path = ft_strjoin(arr->path1, arr->path2);
 	arr->split_path = ft_split(arr->path, ':');
 	return (arr->split_path);
@@ -102,30 +112,4 @@ int	size_list_cmd(t_cmd *cmd, t_builtin *arr)
 		size = size->next;
 	}
 	return (arr->a);
-}
-
-void	single_here_doc(t_builtin *arr, char **args)
-{
-	char	*p;
-	char	*limiter;
-
-	arr->pid = fork();
-	if (arr->pid == -1)
-		perror("fork: ");
-	if (arr->pid == 0)
-	{
-		limiter = ft_strjoin(args[0], "\n");
-		while (1)
-		{
-			ft_putstr_fd("here_doc > ", 1);
-			p = get_next_line(0);
-			if (!p || strcmp(limiter, p) == 0)
-				break ;
-			free(p);
-		}
-		free(limiter);
-		exit (0);
-	}
-	else
-		wait(NULL);
 }

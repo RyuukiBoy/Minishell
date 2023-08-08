@@ -6,7 +6,7 @@
 /*   By: oait-bad <oait-bad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/08 16:37:31 by oait-bad          #+#    #+#             */
-/*   Updated: 2023/08/04 09:15:03 by oait-bad         ###   ########.fr       */
+/*   Updated: 2023/08/08 15:24:54 by oait-bad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,14 @@ typedef struct s_cmd
 	struct s_cmd *next;
 }		t_cmd;
 
+typedef struct s_quote
+{
+	int		i;
+	int		o_len;
+	int		i_len;
+	char	c;
+}			t_quote;
+
 typedef struct	s_all
 {
 	t_iof	*fd;
@@ -69,6 +77,11 @@ typedef struct s_builtin
 	int		i;
 	int		j;
 	int		y;
+	int		x;
+	int		xa;
+	int		ya;
+	int		*exitstatus;
+	int		*exitarray;
 	int		start;
 	int		end;
 	int		move_b;
@@ -79,12 +92,19 @@ typedef struct s_builtin
 	int		new_line;
 	int		pid;
 	int		p[2];
+	int		her_p[2];
+	int		her_f;
 	int		exe;
 	int		str_a;
 	int		str_b;
 	int		str_c;
 	int		start_red;
 	int		end_der;
+	int		*add_b;
+	int		add_a;
+	int		add_c;
+	int		exit;
+	char	*del_quot;
 	char	*pipe_cmd;
 	char	**phrase;
 	char	*name;
@@ -130,7 +150,6 @@ typedef struct s_exp
 	char			*all_cmd;
 }			t_exp;
 
-
 int	g_exit_status;
 
 # ifndef BUFFER_SIZE
@@ -140,11 +159,11 @@ int	g_exit_status;
 /* function utils */
 
 void	check_av_ac(int ac, char **av);
-void	after_cmd(char *cmd, t_builtin *arr, t_iof *fd);
-char	*any_cmd(char *cmd, t_builtin *arr, t_iof *fd);
-void	check_qoutes(char *cmd, t_builtin *arr);
-void	check_last_qoutes(char **cmd, int c, t_builtin *arr);
-void	check_first_qoutes(char **cmd, int c, t_builtin *arr);
+void	after_cmd(char *cmd, t_builtin *arr, t_all all);
+char	*any_cmd(char *cmd, t_builtin *arr, t_all all);
+int		check_qoutes(char *cmd, t_builtin *arr);
+int		check_first_qoutes(char *cmd, t_builtin *arr);
+int		check_last_qoutes(char *cmd, t_builtin *arr);
 int		ft_strncmp(const char *s1, const char *s2, size_t n);
 int		ft_strcmp(char *s1, char *s2);
 char	*ft_strjoin_execve(char const *s1, char const *s2);
@@ -155,10 +174,14 @@ char	**ft_strdup_double(char **s1);
 void	ft_free_double(char **cmd);
 int		ft_strlen_double(char *cmd, t_builtin *arr);
 int		size_list_cmd(t_cmd *cmd, t_builtin *arr);
+char	**ft_split_qoutes(char const *s, char c);
+char	**ft_split_space(char const *s, char c);
+int		check_opera(char *cmd, t_builtin *arr);
+int		check_qoutes_red(char *cmd, t_builtin *arr);
 
 /* test_function */
 
-void	check_cmd(char **cmd, t_builtin *arr, t_env *new_env);
+void	check_cmd(char **cmd, t_builtin *arr, t_env **new_env);
 char	**check_path_env(t_env *new_env, t_builtin *arr);
 // void	first_cmd(t_pipe **cmd, t_builtin *arr);
 // void	second_cmd(t_pipe **cmd, t_builtin *arr);
@@ -172,7 +195,7 @@ void	execve_cmd_test(t_builtin *arr);
 
 /* start builtin function */
 
-void	builtin_cd(char **av);
+void	builtin_cd(char **av, t_env *env);
 void	builtin_pwd(void);
 int		echo_space(char **av, t_builtin *arr);
 void	print_echo(char **av, int args, t_builtin *arr);
@@ -181,41 +204,46 @@ t_env	*add_env(char *name, char *value);
 t_env	*last_node(t_env **env);
 void	add_back(t_env **head, char *name, char *value);
 void	print_env(t_env *head);
-t_env	*builtin_env(char **env, t_builtin *arr, t_env *head);
+t_env   *builtin_env(char **env, t_builtin	*arr, t_env **head);
 void	print_export(t_env *head);
 t_env	*sort_export(t_env *head, t_builtin *arr);
 t_env	*before_sort(t_env *head);
-void	builtin_add(t_env **head, t_builtin *arr, char **add);
+void	builtin_add(t_env **head, t_builtin *arr, char *add);
 void	builtin_export(t_env *head, char **add, t_builtin *arr);
 void	check_unset(t_builtin *arr, char **add);
 void	check_cmd_unset(t_builtin *arr, char **add);
 void	delete_unset(t_env **head, t_builtin *arr);
 void	builtin_check(t_env **head, t_builtin *arr, char **add);
-void	builtin_unset(t_env *head, t_builtin *arr, char **add);
+void	builtin_unset(t_env **head, t_builtin *arr, char **add);
 void	check_first_char(t_builtin *arr, char **add);
 void	swap_env(t_env *new_node, t_env *tmp, t_builtin *arr);
 char	*ft_strdup_unset(const char *s1);
 int		size_stack(t_env *head);
 int		check_add(t_env **head, t_builtin *arr);
 void	check_after_back(t_builtin *arr, char **add);
-void	check_path(t_builtin *arr, char **add);
-void	check_char(t_builtin *arr, char **add);
+int		*check_path(t_builtin *arr, char **add, t_env **new_node);
+int		check_char(t_builtin *arr, char **add, t_env **new_node);
+void	builtin_exit(char **add, t_builtin *arr);
+void	builtin_exit_multi(char **add, t_builtin *arr);
+int		ft_strlen_pointer(char **add);
 
 /* end builtin function */
 
 /* start single cmd function */
 
-void	check_single_cmd(t_all all, t_builtin *arr, t_env *new_env);
+int		here_doc(t_builtin *arr, t_all all, char *args);
+void	check_single_cmd(t_all all, t_builtin *arr, t_env **new_env);
 void	builtin_child(char *input, t_env *new_env, t_builtin *arr);
 void	single_cmd(t_all all, t_builtin *arr);
 void	access_single_cmd(t_all all, t_builtin *arr);
 char	**put_env_array(t_env **new_env, t_builtin *arr, int space);
-int		size_list(t_env **new_env, t_builtin *arr);
+int		size_list(t_env *new_env, t_builtin *arr);
 char	*ft_strjoin_exe(char const *s1, char const *s2);
 char	**check_env_path(t_env **new_env, t_builtin *arr);
 void	single_here_doc(t_builtin *arr, char **args);
 void	execve_cmd(t_all all, t_builtin *arr);
 void	execve_path_cmd(t_all all, t_builtin *arr);
+void	check_io_file_single(t_all all, t_builtin *arr, t_env **new_env);
 
 /* end single cmd function */
 
@@ -256,11 +284,17 @@ char	**split_args(char *str);
 char	***split_cmds(char *str);
 char	**split_pipes(char *str);
 int		count_args(char *str);
-int		check_all_opers(int *arr);
 char	*add_spaces(char *str);
-int		skip_whitespaces(char *str, int i);
-void	redirect(char **cmd, t_iof *file);
+void	redirect(char **cmd, t_builtin *arr, t_all all);
 int		parse(char *line);
 int		*get_tokens(char **cmd);
+void	expand(char **args, t_env *envp);
+void	print_it(char c);
+int		check_pipes(char *line);
+int		check_last_pipe(char *line);
+int		norm_redirections_check(char *str);
+int		check_quotes(char *str);
+void	free_exp(t_exp *exp);
+int		is_inside_squotes(char *str, int i);
 
 #endif

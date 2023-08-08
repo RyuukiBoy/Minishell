@@ -6,30 +6,51 @@
 /*   By: oait-bad <oait-bad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 14:44:04 by oait-bad          #+#    #+#             */
-/*   Updated: 2023/07/27 18:17:49 by oait-bad         ###   ########.fr       */
+/*   Updated: 2023/08/08 11:17:54 by oait-bad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int	check_unclosed_quotes(char *str)
+char	ft_riplice(char c, int quotes_type)
 {
-	int		i;
-	int		single;
-	int		doubleq;
-
-	i = 0;
-	single = 0;
-	doubleq = 0;
-	while (str[i])
+	if (c == 0)
 	{
-		if (str[i] == '\'')
-			single++;
-		if (str[i] == '\"')
-			doubleq++;
-		i++;
+		if (quotes_type == 1)
+			return ('\"');
+		else if (quotes_type == 0)
+			return ('\'');
 	}
-	if (single % 2 != 0 || doubleq % 2 != 0)
+	else
+	{
+		if (quotes_type == 1 && c == '\"')
+			return (0);
+		else if (quotes_type == 0 && c == '\'')
+			return (0);
+	}
+	return (c);
+}
+
+int	check_quotes(char *str)
+{
+	t_quote	q;
+
+	q = (t_quote){0, 0, 0};
+	while (str[q.i])
+	{
+		if (str[q.i] == '\"' && q.c != '\'')
+		{
+			q.c = ft_riplice(q.c, 1);
+			q.i_len++;
+		}
+		else if (str[q.i] == '\'' && q.c != '\"')
+		{
+			q.c = ft_riplice(q.c, 0);
+			q.o_len++;
+		}
+		q.i++;
+	}
+	if (q.o_len % 2 != 0 || q.i_len % 2 != 0)
 	{
 		printf("minishell: unclosed quotes\n");
 		return (0);
@@ -82,7 +103,7 @@ char	*delete_quotes(char *str)
 //		line = readline("minishell$ ");
 //		if (line == NULL)
 //			break ;
-//		new = delete_quotes(line);
-//		printf("%s\n", new);
+//		if (check_quotes(line))
+//			continue ;
 //	}
 //}

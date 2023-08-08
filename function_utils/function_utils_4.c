@@ -1,34 +1,34 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   function_utils_1.c                                 :+:      :+:    :+:   */
+/*   function_utils_4.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ybargach <ybargach@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/07/31 13:16:08 by ybargach          #+#    #+#             */
-/*   Updated: 2023/08/06 11:14:19 by ybargach         ###   ########.fr       */
+/*   Created: 2023/08/06 09:34:17 by ybargach          #+#    #+#             */
+/*   Updated: 2023/08/06 15:51:28 by ybargach         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int	skip_double_space(char const *str, int a)
+int	skip_double_quotes(char const *str, int a)
 {
 	a = a + 1;
-	while (str[a] != '\"' && str[a + 1])
+	while (str[a] != '\"' && str[a] != '\0')
 		a++;
 	return (a);
 }
 
-int	skip_single_space(char const *str, int a)
+int	skip_single_quotes(char const *str, int a)
 {
 	a = a + 1;
-	while (str[a] != '\'' && str[a + 1])
+	while (str[a] != '\'' && str[a] != '\0')
 		a++;
 	return (a);
 }
 
-static int	wordspa(char const *str, char c)
+static int	words(char const *str, char c)
 {
 	int	a;
 	int	count;
@@ -44,9 +44,11 @@ static int	wordspa(char const *str, char c)
 		while (str[a] != c && str[a])
 		{
 			if (str[a] == '\"')
-				a = skip_double_space(str, a);
+			a = skip_double_quotes(str, a);
 			else if (str[a] == '\'')
-				a = skip_single_space(str, a);
+			a = skip_single_quotes(str, a);
+			if (str[a] == '\0')
+				break ;
 			a++;
 		}
 		count++;
@@ -54,7 +56,7 @@ static int	wordspa(char const *str, char c)
 	return (count);
 }
 
-static int	start_space(char *str, char c, int i)
+static int	start_quotes(char *str, char c, int i)
 {
 	while (str[i] == c && str[i])
 	{
@@ -63,29 +65,30 @@ static int	start_space(char *str, char c, int i)
 	return (i);
 }
 
-static int	end_space(char *str, char c, int i)
+static int	end_qoutes(char *str, char c, int i)
 {
 	while (str[i] != c && str[i])
 	{
-
 		if (str[i] == '\"')
 		{
 			i = i + 1;
-			while (str[i] != '\"' && str[i + 1])
+			while (str[i] != '\"' && str[i])
 				i++;
 		}
 		else if (str[i] == '\'')
 		{
 			i = i + 1;
-			while (str[i] != '\'' && str[i + 1])
+			while (str[i] != '\'' && str[i])
 				i++;
 		}
+		if (str[i] == '\0')
+			break ;
 		i++;
 	}
 	return (i);
 }
 
-static char	*trim_space(char const *s, char c)
+static char	*trim_qoutes(char const *s, char c)
 {
 	char	*t;
 	char	*str;
@@ -102,7 +105,7 @@ static char	*trim_space(char const *s, char c)
 	return (str);
 }
 
-char	**ft_split_space(char const *s, char c)
+char	**ft_split_qoutes(char const *s, char c)
 {
 	char	**p;
 	char	*str;
@@ -112,48 +115,21 @@ char	**ft_split_space(char const *s, char c)
 
 	if (!s)
 		return (0);
-	str = trim_space(s, c);
+	str = trim_qoutes(s, c);
 	b = 0;
 	x = 0;
 	y = 0;
-	p = (char **)malloc((wordspa(str, c) + 1) * sizeof(char *));
+	p = (char **)malloc((words(str, c) + 1) * sizeof(char *));
 	if (!p || !str)
 		return (0);
-	while (b < wordspa(str, c))
+	while (b < words(str, c))
 	{
-		x = start_space(str, c, y);
-		y = end_space(str, c, x);
+		x = start_quotes(str, c, y);
+		y = end_qoutes(str, c, x);
 		p[b] = ft_substr(str, x, (y - x));
 		b++;
 	}
 	p[b] = NULL;
 	free(str);
-	return (p);
-}
-
-char	*ft_strjoin_execve(char const *s1, char const *s2)
-{
-	char	*p;
-	int		d;
-	int		a;
-	int		b;
-
-	if (!s1 || !s2)
-		return (0);
-	d = (ft_strlen(s1) + ft_strlen(s2) + 2);
-	a = 0;
-	b = 0;
-	p = malloc(d * sizeof(char));
-	if (!p)
-		return (0);
-	while (s1[b] && d - 1 > a)
-	{
-		p[a] = s1[b];
-		a++;
-		b++;
-	}
-	p[a++] = '/';
-	p[a] = '\0';
-	ft_strlcat(p, s2, d);
 	return (p);
 }

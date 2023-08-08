@@ -6,7 +6,7 @@
 /*   By: ybargach <ybargach@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/11 14:07:11 by ybargach          #+#    #+#             */
-/*   Updated: 2023/06/13 11:28:01 by ybargach         ###   ########.fr       */
+/*   Updated: 2023/08/08 13:03:05 by ybargach         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,11 +53,11 @@ int	check_add(t_env **head, t_builtin *arr)
 
 	arr->c = 0;
 	new_node = *head;
+	arr->line = ft_strdup_unset(arr->name);
 	while (new_node != NULL)
 	{
 		arr->new_name = ft_strdup_unset(new_node->name);
-		arr->line = ft_strdup_unset(arr->name);
-		if (strcmp(arr->new_name, arr->line) == 0)
+		if (ft_strcmp(arr->new_name, arr->line) == 0)
 		{
 			if (arr->value != NULL)
 			{
@@ -67,43 +67,37 @@ int	check_add(t_env **head, t_builtin *arr)
 			arr->c = 1;
 		}
 		free(arr->new_name);
-		free(arr->line);
 		new_node = new_node->next;
 	}
+	free(arr->line);
 	return (arr->c);
 }
 
-void	check_after_back(t_builtin *arr, char **add)
+int	*check_path(t_builtin *arr, char **add, t_env **new_node)
 {
-	if (!((add[arr->a][arr->b + 1] >= 'a' && add[arr->a][arr->b + 1] <= 'z')
-		|| (add[arr->a][arr->b + 1] >= 'A' && add[arr->a][arr->b + 1] <= 'Z')
-		|| (add[arr->a][arr->b + 1] >= '0' && add[arr->a][arr->b + 1] <= '9')
-		|| add[arr->a][arr->b + 1] == '_'))
-	{
-		ft_putstr_fd(add[arr->a], 2);
-		ft_putstr_fd(": not a valid identifier\n", 2);
-		exit(1);
-	}
-	else
-		exit(0);
-}
+	int	a;
 
-void	check_path(t_builtin *arr, char **add)
-{
-	arr->a = 0;
+	arr->a = 1;
+	arr->add_c = 0;
+	arr->add_a = 1;
+	while (add[arr->add_a])
+		arr->add_a++;
+	arr->add_b = malloc((arr->add_a) * (sizeof(int)));
 	while (add[arr->a])
 	{
 		arr->b = 0;
-		check_first_char(arr, add);
+		a = 0;
 		while (add[arr->a][arr->b])
 		{
-			if (add[arr->a][arr->b] == '=')
+			if (add[arr->a][arr->b] == '=' || add[arr->a][arr->b] == ' ')
 				break ;
-			if (add[arr->a][arr->b] == '\\')
-				check_after_back(arr, add);
-			check_char(arr, add);
+			a = check_char(arr, add, new_node);
+			if (a != 0)
+				break ;
 			arr->b++;
 		}
+		arr->add_b[arr->add_c++] = a;
 		arr->a++;
 	}
+	return (arr->add_b);
 }

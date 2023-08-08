@@ -6,56 +6,39 @@
 /*   By: oait-bad <oait-bad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/15 01:24:37 by oait-bad          #+#    #+#             */
-/*   Updated: 2023/08/03 10:07:56 by oait-bad         ###   ########.fr       */
+/*   Updated: 2023/08/08 15:15:42 by oait-bad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-char	*get_env_key(char *input)
+char	*get_env_value(char *key, t_env *env)
 {
-	int		i;
-	char	*key;
-
-	i = 0;
-	while (input[i] && input[i] != '=')
-		i++;
-	key = (char *)malloc(sizeof(char) * (i + 1));
-	i = 0;
-	while (input[i] && input[i] != '=')
-	{
-		key[i] = input[i];
-		i++;
-	}
-	key[i] = '\0';
-	return (key);
-}
-
-char	*get_env_value(char *key, char **env)
-{
-	int		i;
-	int		j;
 	char	*value;
 	char	*tmp;
 
-	i = 0;
-	while (env[i])
+	while (env)
 	{
-		j = 0;
 		tmp = ft_strjoin(key, "=");
-		if (ft_strnstr(env[i], tmp, ft_strlen(tmp)))
+		if (ft_strncmp(env->name, tmp, ft_strlen(tmp)) == 0)
 		{
-			value = ft_strdup(env[i] + ft_strlen(tmp));
+			value = ft_strdup(env->value);
 			free(tmp);
 			return (value);
 		}
-		free(tmp);
-		i++;
+		env = env->next;
 	}
 	return (0);
 }
 
-void	apply_expander(char **args, char **env, int i, int j)
+void	norm_ex(t_exp *exp, t_env *envp)
+{
+	exp->value = get_env_value(exp->key, envp);
+	if (!exp->value)
+		exp->value = ft_strdup("");
+}
+
+void	apply_expander(char **args, t_env *envp, int i, int j)
 {
 	t_exp	*exp;
 
@@ -72,78 +55,57 @@ void	apply_expander(char **args, char **env, int i, int j)
 			j++;
 		exp->end = j;
 		exp->key = ft_substr(args[i], exp->start, exp->end - exp->start);
-		exp->value = get_env_value(exp->key, env);
-		if (!exp->value)
-			exp->value = ft_strdup("");
-		free(exp->key);
-		exp->after = ft_substr(args[i], exp->end, ft_strlen(args[i]) - exp->end);
+		norm_ex(exp, envp);
+		exp->after = ft_substr(args[i], exp->end, ft_strlen(args[i])
+				- exp->end);
 		exp->tmp = ft_strjoin(exp->before, exp->value);
 		exp->all_cmd = ft_strjoin(exp->tmp, exp->after);
 		free(args[i]);
 		args[i] = exp->all_cmd;
-		free(exp->tmp);
-		free(exp->before);
-		free(exp->after);
-		apply_expander(args, env, i, 0);
+		free_exp(exp);
+		apply_expander(args, envp, i, 0);
 	}
 }
 
-char	**dollar_sign(char **args, char **env)
+void	expand_norm(char **args, t_env *envp, int i, int j)
 {
+	t_exp	*exp;
+
+	exp = (t_exp *)malloc(sizeof(t_exp));
+	if (args[i][j] == '$')
+	{
+		if (args[i][j + 1] == '?')
+		{
+			args[i][j] = '\0';
+			args[i] = ft_strjoin(args[i], ft_itoa(g_exit_status));
+			args[i] = ft_strjoin(args[i], &args[i][j + 2]);
+		}
+		else if (ft_isdigit(args[i][j + 1]))
+		{
+			args[i][j] = '\0';
+			args[i] = ft_strjoin(args[i], &args[i][j + 2]);
+		}
+		else if (!is_inside_squotes(args[i], j))
+			apply_expander(args, envp, i, j);
+	}
+}
+
+void	expand(char **args, t_env *envp)
+{
+	t_exp	*exp;
 	int		i;
 	int		j;
-	t_exp	*exp;
 
 	i = 0;
 	exp = (t_exp *)malloc(sizeof(t_exp));
 	while (args[i])
 	{
 		j = 0;
-		if (ft_strchr(args[i], '$'))
+		while (args[i][j])
 		{
-			if (args[i][j] == '$' && args[i][j + 1] == '?')
-			{
-				exp->value = ft_itoa(g_exit_status);
-				exp->all_cmd = ft_strjoin(exp->value, args[i] + 2);
-				free(args[i]);
-				args[i] = exp->all_cmd;
-			}
-			else if (args[i][j] == '$' && ft_isdigit(args[i][j + 1]))
-			{
-				exp->value = ft_strdup("");
-				exp->all_cmd = ft_strjoin(exp->value, args[i] + 2);
-				free(args[i]);
-				args[i] = exp->all_cmd;
-			}
-			apply_expander(args, env, i, j);
+			expand_norm(args, envp, i, j);
+			j++;
 		}
 		i++;
 	}
-	return (args);
 }
-
-//int	main(int argc, char **argv, char **env)
-//{
-//	char	*line;
-//	char	**args;
-//	int		i;
-
-//	(void)argc;
-//	(void)argv;
-//	while (1)
-//	{
-//		line = readline("minishell$ ");
-//		if (!line)
-//			break ;
-//		add_history(line);
-//		args = dollar_sign(split_args(line), env);
-//		i = 0;
-//		while (args[i])
-//		{
-//			printf("%s\n", delete_quotes(args[i]));
-//			i++;
-//		}
-//		free(line);
-//		free(args);
-//	}
-//}

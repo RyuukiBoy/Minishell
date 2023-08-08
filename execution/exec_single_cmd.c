@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_single_cmd.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ybargach <ybargach@student.42.fr>          +#+  +:+       +#+        */
+/*   By: oait-bad <oait-bad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/14 10:48:43 by ybargach          #+#    #+#             */
-/*   Updated: 2023/08/03 10:47:27 by ybargach         ###   ########.fr       */
+/*   Updated: 2023/08/08 15:23:12 by oait-bad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ void	execve_path_cmd(t_all all, t_builtin *arr)
 		ft_putstr_fd(*all.cmd->cmd, 2);
 		write(2, ": Command not found\n", 20);
 	}
+	//exit_value = 127;
 	exit(127);
 }
 
@@ -30,5 +31,6 @@ void	execve_cmd(t_all all, t_builtin *arr)
 		ft_putstr_fd(*all.cmd->cmd, 2);
 		write(2, ": Command not found\n", 20);
 	}
+	//exit_value = 127;
 	exit(127);
 }
