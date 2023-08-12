@@ -3,14 +3,41 @@
 /*                                                        :::      ::::::::   */
 /*   ft_substr.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: oait-bad <oait-bad@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ybargach <ybargach@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/14 22:31:13 by oait-bad          #+#    #+#             */
-/*   Updated: 2022/12/21 13:54:38 by oait-bad         ###   ########.fr       */
+/*   Updated: 2023/08/11 17:23:27 by ybargach         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
+
+char	*ft_substr(char const *s, unsigned int start, size_t len)
+{
+	char			*p;
+	unsigned int	a;
+	unsigned int	b;
+
+	a = start;
+	b = 0;
+	if (!s)
+		return (0);
+	if (len > ft_strlen(s))
+		len = (unsigned int)ft_strlen(s) - start;
+	if (start > (unsigned int)ft_strlen(s) || len == 0)
+		return (ft_strdup(""));
+	p = malloc((len + 1) * sizeof(char));
+	if (!p)
+		return (0);
+	while (s[a] && b < len)
+	{
+		p[b] = s[a];
+		a++;
+		b++;
+	}
+	p[b] = '\0';
+	return (p);
+}
 
 static size_t	ft_min(unsigned long long a, unsigned long long b)
 {
@@ -19,7 +46,7 @@ static size_t	ft_min(unsigned long long a, unsigned long long b)
 	return (b);
 }
 
-char	*ft_substr(char const *s, unsigned int start, size_t len)
+char	*ft_substr_simple(char const *s, unsigned int start, size_t len)
 {
 	char			*d;
 	size_t			i;

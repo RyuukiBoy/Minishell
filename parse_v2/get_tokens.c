@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_tokens.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: oait-bad <oait-bad@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ybargach <ybargach@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/11 01:55:13 by oait-bad          #+#    #+#             */
-/*   Updated: 2023/08/08 15:19:26 by oait-bad         ###   ########.fr       */
+/*   Updated: 2023/08/11 21:15:27 by ybargach         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,6 @@ void	check_after_op(char **cmd, int *type, int i)
 	else
 		type[i] = ARG;
 }
-// " /\\&|;<>\"'(){}[]$=#\`"
 
 int	ft_array_size(char **cmd)
 {
@@ -72,34 +71,3 @@ int	*get_tokens(char **cmd)
 	}
 	return (type);
 }
-
-//int main(int ac, char **av, char **env)
-//{
-//	t_env	*head;
-//	t_env	*new_env;
-//	t_builtin	*arr;
-//	char	**cmd;
-//	int		*type;
-
-//	check_av_ac(ac, av);
-//	type = malloc(sizeof(int));
-//	head = NULL;
-//	arr = (t_builtin *)malloc(sizeof(t_builtin));
-//	arr->xa = dup(0);
-//	arr->ya = dup(1);
-//	new_env = builtin_env(env, arr, &head);
-//	arr->d = 0;
-//	while (1)
-//	{
-//		dup2(arr->xa, 0);
-//		dup2(arr->ya, 1);
-//		arr->first_line = readline(KRED"minihell$ "KWHT);
-//		if (!arr->first_line)
-//			break ;
-//		add_history(arr->first_line);
-//		cmd = ft_split_qoutes(arr->first_line, '|');
-//		check_cmd(cmd, arr, &head);
-//		free(arr->first_line);
-//		arr->d++;
-//	}
-//}

@@ -6,7 +6,7 @@
 /*   By: ybargach <ybargach@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/11 14:16:09 by ybargach          #+#    #+#             */
-/*   Updated: 2023/08/08 13:36:59 by ybargach         ###   ########.fr       */
+/*   Updated: 2023/08/12 08:02:05 by ybargach         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ void	check_unset(t_builtin *arr, char **add)
 	{
 		ft_putstr_fd(add[arr->a], 2);
 		ft_putstr_fd(": not a valid identifier\n", 2);
-		exit(1);
+		g_exit_value = 1;
 	}
 }
 
@@ -40,36 +40,27 @@ void	check_cmd_unset(t_builtin *arr, char **add)
 	}
 }
 
-void	delete_unset(t_env **head, t_builtin *arr) 
+void	delete_unset(t_env **head, t_builtin *arr)
 {
 	t_env	*current;
 	t_env	*prev;
+	t_env	*tmp;
 
+	tmp = NULL;
 	prev = NULL;
 	current = *head;
-	while (current != NULL) 
+	while (current != NULL)
 	{
 		arr->new_name = ft_strdup_unset(current->name);
-		if (ft_strcmp(arr->name, arr->new_name) == 0) 
+		if (ft_strcmp(arr->name, "_") == 0)
+			return ;
+		if (ft_strcmp(arr->name, arr->new_name) == 0)
 		{
 			if (prev == NULL)
-			{
-				t_env *tmp;
-				tmp = current->next;
-				*head = tmp;
-				free(current->name);
-				free(current->value);
-				free(current);
-				current = tmp;
-			} 
+				cmp_delete(head, tmp, current);
 			else
-			{
-				prev->next = current->next;
-				free(current->name);
-				free(current->value);
-				free(current);
-			}
-			return ; 
+				cmp_delete_two(current, prev);
+			return ;
 		}
 		free(arr->new_name);
 		prev = current;
@@ -83,6 +74,8 @@ void	builtin_check(t_env **head, t_builtin *arr, char **add)
 	arr->a = 1;
 	while (add[arr->a])
 	{
+		if (check_first_char(add[arr->a]) == 1)
+			break ;
 		arr->b = 0;
 		while (add[arr->a][arr->b])
 		{
@@ -101,6 +94,8 @@ void	builtin_check(t_env **head, t_builtin *arr, char **add)
 
 void	builtin_unset(t_env **head, t_builtin *arr, char **add)
 {
+	free(arr->cmd_ns);
+	g_exit_value = 0;
 	if (add[1] != NULL)
 		builtin_check(head, arr, add);
 	else

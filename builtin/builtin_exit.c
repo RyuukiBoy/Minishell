@@ -3,41 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_exit.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: oait-bad <oait-bad@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ybargach <ybargach@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/06 13:13:11 by ybargach          #+#    #+#             */
-/*   Updated: 2023/08/08 15:30:54 by oait-bad         ###   ########.fr       */
+/*   Updated: 2023/08/12 08:01:53 by ybargach         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
-
-void	print_error_exit(char *add)
-{
-	printf("exit\n");
-	printf("minishell: exit: %s: numeric argument required\n", add);
-	//exit_value = 255;
-}
-
-void	print_exit(char *add)
-{
-	int	a;
-	int	b;
-
-	a = ft_atoi(add);
-	if (a >= 0)
-	{
-		b = a % 256;
-		printf("exit\n");
-		//exit_value = b;
-	}
-	else
-	{
-		b = (a % 256 + 256) % 256;
-		printf("exit\n");
-		//exit_value = b;
-	}
-}
 
 int	ft_strlen_pointer(char **add)
 {
@@ -63,11 +36,11 @@ void	welcome_to_exit(char *add, t_builtin *arr)
 	print_exit(add);
 }
 
-void	many_error_exit(char **add)
+void	many_error_exit(void)
 {
 	printf("exit\n");
 	printf("minishell: exit: too many aruments\n");
-	//exit_value = 1;
+	g_exit_value = 1;
 }
 
 void	check_exit(char **add, t_builtin *arr)
@@ -81,21 +54,22 @@ void	check_exit(char **add, t_builtin *arr)
 		{
 			printf("exit\n");
 			printf("minishell: exit: %s: numeric argument required\n", add[1]);
-			//exit_value = 255;
+			g_exit_value = 255;
 		}
 		arr->a++;
 	}
-	many_error_exit(add);
+	many_error_exit();
 }
 
 void	builtin_exit(char **add, t_builtin *arr)
 {
+	free(arr->cmd_ns);
 	arr->a = 1;
 	if (add[1] == NULL)
 	{
 		printf("exit\n");
-		//exit_value = 0;
-		exit (0);
+		g_exit_value = 0;
+		exit (g_exit_value);
 	}
 	else
 	{

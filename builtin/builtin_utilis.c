@@ -6,11 +6,21 @@
 /*   By: ybargach <ybargach@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/11 14:07:11 by ybargach          #+#    #+#             */
-/*   Updated: 2023/08/08 13:03:05 by ybargach         ###   ########.fr       */
+/*   Updated: 2023/08/11 23:03:48 by ybargach         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+
+t_env	*last_node(t_env **env)
+{
+	t_env	*lastnode;
+
+	lastnode = *env;
+	while (lastnode->next != NULL)
+		lastnode = lastnode->next;
+	return (lastnode);
+}
 
 char	*ft_strdup_unset(const char *s1)
 {
@@ -47,7 +57,7 @@ int	size_stack(t_env *head)
 	return (a);
 }
 
-int	check_add(t_env **head, t_builtin *arr)
+void	check_add(t_env **head, t_builtin *arr)
 {
 	t_env	*new_node;
 
@@ -61,16 +71,19 @@ int	check_add(t_env **head, t_builtin *arr)
 		{
 			if (arr->value != NULL)
 			{
-				new_node->name = arr->name;
-				new_node->value = arr->value;
+				free(new_node->name);
+				new_node->name = ft_strdup(arr->name);
+				free(new_node->value);
+				new_node->value = ft_strdup(arr->value);
 			}
+			free(arr->new_name);
 			arr->c = 1;
+			break ;
 		}
 		free(arr->new_name);
 		new_node = new_node->next;
 	}
 	free(arr->line);
-	return (arr->c);
 }
 
 int	*check_path(t_builtin *arr, char **add, t_env **new_node)

@@ -6,7 +6,7 @@
 /*   By: ybargach <ybargach@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/01 10:40:45 by ybargach          #+#    #+#             */
-/*   Updated: 2023/08/03 14:19:13 by ybargach         ###   ########.fr       */
+/*   Updated: 2023/08/09 13:39:53 by ybargach         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ char	**ft_strdup_double(char **s1)
 	while (s1[b])
 	{
 		s2[b] = ft_strdup(s1[b]);
-		b++;	
+		b++;
 	}
 	s2[b] = NULL;
 	return (s2);

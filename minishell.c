@@ -6,7 +6,7 @@
 /*   By: oait-bad <oait-bad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/08 16:37:28 by oait-bad          #+#    #+#             */
-/*   Updated: 2023/08/08 15:29:18 by oait-bad         ###   ########.fr       */
+/*   Updated: 2023/08/12 10:09:24 by oait-bad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,40 +25,46 @@ void	sig_handler(int sig)
 		return ;
 }
 
-int main(int argc, char **argv, char **env)
+void	dup_check(t_builtin	*arr, int ac, char **av)
 {
-	int			x;
-	int			y;
-	char		**cmd;
-	t_env		*new_env;
-	t_env		*head;
-	t_builtin	*arr;
-
 	signal(SIGINT, sig_handler);
 	signal(SIGQUIT, sig_handler);
-	check_av_ac(argc, argv);
-	x = dup(0);
-	y = dup(1);
-	cmd = malloc(sizeof(char *));
-	arr = (t_builtin *)malloc(sizeof(t_builtin));
+	check_av_ac(ac, av);
+	arr->xa = dup(0);
+	arr->ya = dup(1);
+}
+
+void	every_dup(t_builtin	*arr)
+{
+	dup2(arr->xa, 0);
+	dup2(arr->ya, 1);
+}
+
+int	main(int ac, char **av, char **env)
+{
+	t_builtin	*arr;
+	t_env		*head;
+	t_env		*new_env;
+
 	head = NULL;
+	arr = (t_builtin *)malloc(sizeof(t_builtin));
+	dup_check(arr, ac, av);
 	new_env = builtin_env(env, arr, &head);
 	while (1)
 	{
-		dup2(x, 0);
-		dup2(y, 1);
+		every_dup(arr);
 		arr->first_line = readline(KRED"minishell$ "KWHT);
 		if (!arr->first_line)
 			break ;
 		add_history(arr->first_line);
 		if (parse(arr->first_line))
 		{
-			cmd = ft_split((arr->first_line), '|');
-			expand(cmd, new_env);
-			check_cmd(cmd, arr, &head);
+			arr->bf_cmd = ft_split_qoutes(arr->first_line, '|');
+			free(arr->first_line);
+			expation(arr, new_env);
+			check_cmd(arr->bf_cmd, arr, &head);
 		}
-		free(arr->first_line);
+		else
+			free(arr->first_line);
 	}
-	printf("exit\n");
-	exit(0);
 }

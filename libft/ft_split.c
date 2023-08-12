@@ -3,94 +3,99 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: oait-bad <oait-bad@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ybargach <ybargach@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/21 23:12:15 by oait-bad          #+#    #+#             */
-/*   Updated: 2023/06/06 11:19:55 by oait-bad         ###   ########.fr       */
+/*   Updated: 2023/08/04 08:49:10 by ybargach         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-static int	ft_count(char *s, char c)
+static int	word(char const *str, char c)
 {
-	int	i;
+	int	a;
 	int	count;
 
-	i = 0;
+	a = 0;
 	count = 0;
-	while (s[i])
+	if (!str)
+		return (0);
+	while (str[a])
 	{
-		if (s[i] == c)
-			i++;
-		else
+		while (str[a] == c && str[a])
 		{
-			count++;
-			while (s[i] && s[i] != c)
-				i++;
+			a++;
 		}
+		while (str[a] != c && str[a])
+		{
+			a++;
+		}
+		count++;
 	}
 	return (count);
 }
 
-static char	*ft_fillwords(char *s, char c, int *index)
+static int	start(char *str, char c, int i)
 {
-	char	*str;
-	int		i;
-
-	while (s[*index] && s[*index] == c)
-		(*index)++;
-	i = *index;
-	while (s[i] && s[i] != c)
-		i++;
-	str = (char *)malloc(sizeof(char) * (i - (*index) + 1));
-	if (!str)
-		return (0);
-	i = 0;
-	while (s[*index] && s[*index] != c)
-		str[i++] = s[(*index)++];
-	str[i] = '\0';
-	return (str);
-}
-
-static char	**malloc_free(char **arr)
-{
-	int	i;
-
-	i = 0;
-	while (arr[i])
+	while (str[i] == c && str[i])
 	{
-		free(arr[i]);
 		i++;
 	}
-	free(arr);
-	return (NULL);
+	return (i);
+}
+
+static int	end(char *str, char c, int i)
+{
+	while (str[i] != c && str[i])
+	{
+		i++;
+	}
+	return (i);
+}
+
+static char	*trim(char const *s, char c)
+{
+	char	*t;
+	char	*str;
+
+	if (!s)
+		return (0);
+	t = (char *)malloc(2 * sizeof(char));
+	if (!t)
+		return (0);
+	t[0] = c;
+	t[1] = '\0';
+	str = ft_strtrim(s, t);
+	free(t);
+	return (str);
 }
 
 char	**ft_split(char const *s, char c)
 {
-	int		count;
-	int		i;
-	int		j;
-	int		index;
-	char	**arr;
+	char	**p;
+	char	*str;
+	int		b;
+	int		x;
+	int		y;
 
 	if (!s)
 		return (0);
-	count = ft_count((char *)s, c);
-	arr = malloc(sizeof(char *) * (count + 1));
-	if (!arr)
+	str = trim(s, c);
+	b = 0;
+	x = 0;
+	y = 0;
+	p = (char **)malloc((word(str, c) + 1) * sizeof(char *));
+	if (!p || !str)
 		return (0);
-	i = 0;
-	j = 0;
-	index = 0;
-	while (i < count)
+	while (b < word(str, c))
 	{
-		arr[i] = ft_fillwords((char *)s, c, &index);
-		if (!arr[i])
-			return (malloc_free(arr));
-		i++;
+		x = start(str, c, y);
+		y = end(str, c, x);
+		p[b] = ft_substr(str, x, (y - x));
+		b++;
 	}
-	arr[i] = 0;
-	return (arr);
+	p[b] = NULL;
+	free(str);
+	return (p);
 }

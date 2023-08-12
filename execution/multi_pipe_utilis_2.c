@@ -1,19 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   exec_single_cmd.c                                  :+:      :+:    :+:   */
+/*   multi_pipe_utilis_2.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ybargach <ybargach@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/06/14 10:48:43 by ybargach          #+#    #+#             */
-/*   Updated: 2023/08/12 08:02:44 by ybargach         ###   ########.fr       */
+/*   Created: 2023/08/09 14:48:04 by ybargach          #+#    #+#             */
+/*   Updated: 2023/08/12 08:04:03 by ybargach         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	execve_path_cmd(t_all all, t_builtin *arr)
+void	execv_cmd_path(t_all all, t_builtin *arr)
 {
+	close(arr->p[0]);
+	close(arr->p[1]);
 	arr->exe = execve(all.fd->n_cmd[0], all.fd->n_cmd, arr->env_path);
 	if (arr->exe == -1)
 	{
@@ -24,7 +26,7 @@ void	execve_path_cmd(t_all all, t_builtin *arr)
 	exit(127);
 }
 
-void	execv_single_path(t_all all, t_builtin *arr)
+void	execv_path(t_all all, t_builtin *arr)
 {
 	if (ft_strncmp(all.fd->n_cmd[0], "./", 2) == 0)
 	{
@@ -43,11 +45,13 @@ void	execv_single_path(t_all all, t_builtin *arr)
 		}
 	}
 	else
-		execve_path_cmd(all, arr);
+		execv_cmd_path(all, arr);
 }
 
-void	execve_cmd(t_all all, t_builtin *arr)
+void	execv_cmd(t_all all, t_builtin *arr)
 {
+	close(arr->p[0]);
+	close(arr->p[1]);
 	arr->exe = execve(arr->fcmd, all.fd->n_cmd, arr->env_path);
 	if (arr->exe == -1)
 	{
@@ -58,16 +62,44 @@ void	execve_cmd(t_all all, t_builtin *arr)
 	exit(127);
 }
 
-void	access_single_cmd(t_all all, t_builtin *arr)
+void	free_cmd(t_cmd *head)
 {
-	arr->b = 0;
-	while (arr->env_path && arr->env_path[arr->b])
+	int		i;
+	t_cmd	*temp;
+
+	while (head != NULL)
 	{
-		arr->fcmd = ft_strjoin_execve(arr->env_path[arr->b], all.fd->n_cmd[0]);
-		if (access(arr->fcmd, X_OK) == 0)
-			break ;
-		free(arr->fcmd);
-		arr->b++;
+		temp = head;
+		if (temp->cmd != NULL)
+		{
+			i = 0;
+			while (temp->cmd[i] != NULL)
+			{
+				free(temp->cmd[i]);
+				i++;
+			}
+			free(temp->cmd);
+		}
+		head = head->next;
+		free(temp);
 	}
-	execve_cmd(all, arr);
+}
+
+void	free_iof(t_iof *iof)
+{
+	int	i;
+
+	if (iof == NULL)
+		return ;
+	if (iof->n_cmd != NULL)
+	{
+		i = 0;
+		while (iof->n_cmd[i] != NULL)
+		{
+			free(iof->n_cmd[i]);
+			i++;
+		}
+		free(iof->n_cmd);
+	}
+	free(iof);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   libft.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: oait-bad <oait-bad@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ybargach <ybargach@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/11 15:03:54 by oait-bad          #+#    #+#             */
-/*   Updated: 2023/05/12 10:44:52 by oait-bad         ###   ########.fr       */
+/*   Updated: 2023/08/11 09:28:08 by ybargach         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ typedef struct s_list
 	struct s_list	*next;
 }				t_list;
 
+int		ft_strlen_int(const char *str);
 int		ft_atoi(const char *nptr);
 void	ft_bzero(void *s, size_t len);
 int		ft_isalnum(int x);
@@ -41,7 +42,6 @@ char	*ft_strchr(const char *str, int c);
 size_t	ft_strlcat(char *dest, const char *src, size_t len);
 size_t	ft_strlcpy(char *dest, const char *src, size_t len);
 size_t	ft_strlen(const char *str);
-int		ft_strncmp(const char *s1, const char *s2, size_t len);
 char	*ft_strnstr(const char *haystack, const char *needle, size_t len);
 char	*ft_strrchr(const char *str, int c);
 int		ft_tolower(int c);

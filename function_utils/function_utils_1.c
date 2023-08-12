@@ -6,27 +6,11 @@
 /*   By: ybargach <ybargach@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/31 13:16:08 by ybargach          #+#    #+#             */
-/*   Updated: 2023/08/06 11:14:19 by ybargach         ###   ########.fr       */
+/*   Updated: 2023/08/09 13:52:00 by ybargach         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
-
-int	skip_double_space(char const *str, int a)
-{
-	a = a + 1;
-	while (str[a] != '\"' && str[a + 1])
-		a++;
-	return (a);
-}
-
-int	skip_single_space(char const *str, int a)
-{
-	a = a + 1;
-	while (str[a] != '\'' && str[a + 1])
-		a++;
-	return (a);
-}
 
 static int	wordspa(char const *str, char c)
 {
@@ -67,7 +51,6 @@ static int	end_space(char *str, char c, int i)
 {
 	while (str[i] != c && str[i])
 	{
-
 		if (str[i] == '\"')
 		{
 			i = i + 1;
@@ -128,32 +111,5 @@ char	**ft_split_space(char const *s, char c)
 	}
 	p[b] = NULL;
 	free(str);
-	return (p);
-}
-
-char	*ft_strjoin_execve(char const *s1, char const *s2)
-{
-	char	*p;
-	int		d;
-	int		a;
-	int		b;
-
-	if (!s1 || !s2)
-		return (0);
-	d = (ft_strlen(s1) + ft_strlen(s2) + 2);
-	a = 0;
-	b = 0;
-	p = malloc(d * sizeof(char));
-	if (!p)
-		return (0);
-	while (s1[b] && d - 1 > a)
-	{
-		p[a] = s1[b];
-		a++;
-		b++;
-	}
-	p[a++] = '/';
-	p[a] = '\0';
-	ft_strlcat(p, s2, d);
 	return (p);
 }

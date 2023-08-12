@@ -6,27 +6,11 @@
 /*   By: ybargach <ybargach@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/06 09:34:17 by ybargach          #+#    #+#             */
-/*   Updated: 2023/08/06 15:51:28 by ybargach         ###   ########.fr       */
+/*   Updated: 2023/08/09 13:50:42 by ybargach         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
-
-int	skip_double_quotes(char const *str, int a)
-{
-	a = a + 1;
-	while (str[a] != '\"' && str[a] != '\0')
-		a++;
-	return (a);
-}
-
-int	skip_single_quotes(char const *str, int a)
-{
-	a = a + 1;
-	while (str[a] != '\'' && str[a] != '\0')
-		a++;
-	return (a);
-}
 
 static int	words(char const *str, char c)
 {

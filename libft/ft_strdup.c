@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strdup.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: oait-bad <oait-bad@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ybargach <ybargach@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/14 13:48:50 by oait-bad          #+#    #+#             */
-/*   Updated: 2022/12/21 13:53:24 by oait-bad         ###   ########.fr       */
+/*   Updated: 2023/08/04 12:05:32 by ybargach         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@ char	*ft_strdup(const char *s1)
 	char	*s2;
 	char	*s;
 
+	if (!s1)
+		return (NULL);
 	s2 = (char *)s1;
 	s = (char *)malloc(sizeof(char) * ft_strlen(s2) + 1);
 	i = 0;

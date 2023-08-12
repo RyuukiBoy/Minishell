@@ -6,7 +6,7 @@
 /*   By: oait-bad <oait-bad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 14:44:04 by oait-bad          #+#    #+#             */
-/*   Updated: 2023/08/08 11:17:54 by oait-bad         ###   ########.fr       */
+/*   Updated: 2023/08/12 08:44:02 by oait-bad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ int	check_quotes(char *str)
 {
 	t_quote	q;
 
-	q = (t_quote){0, 0, 0};
+	q = (t_quote){0, 0, 0, 0};
 	while (str[q.i])
 	{
 		if (str[q.i] == '\"' && q.c != '\'')
@@ -58,52 +58,46 @@ int	check_quotes(char *str)
 	return (1);
 }
 
-char	*delete_quotes(char *str)
+void	norm_things(char *str, t_norm *var)
 {
-	int		i;
-	int		j;
-	int		flag;
-	char	*new;
-
-	i = 0;
-	j = 0;
-	flag = 0;
 	if ((str[0] == '\'' && str[ft_strlen(str) - 1] != '\'')
 		|| (str[0] == '\"' && str[ft_strlen(str) - 1] != '\"'))
 	{
-		flag = 0;
-		i++;
+		var->flag = 0;
+		var->i++;
 	}
-	new = malloc(ft_strlen(str) + 1);
-	while (str[i])
-	{
-		if (str[i] == '\"' && flag == 0)
-			flag = 1;
-		else if (str[i] == '\"' && flag == 1)
-			flag = 0;
-		else if (str[i] == '\'' && flag == 0)
-			flag = 2;
-		else if (str[i] == '\'' && flag == 2)
-			flag = 0;
-		else
-			new[j++] = str[i];
-		i++;
-	}
-	new[j] = '\0';
-	return (new);
 }
 
-//int main()
-//{
-//	char	*line;
-//	char	*new;
+void	init_var(t_norm *var)
+{
+	var->i = 0;
+	var->j = 0;
+	var->flag = 0;
+}
 
-//	while (1)
-//	{
-//		line = readline("minishell$ ");
-//		if (line == NULL)
-//			break ;
-//		if (check_quotes(line))
-//			continue ;
-//	}
-//}
+char	*delete_quotes(char *str)
+{
+	t_norm	var;
+
+	init_var(&var);
+	if (str == NULL)
+		return (NULL);
+	norm_things(str, &var);
+	var.new = malloc(ft_strlen(str) + 1);
+	while (str[var.i])
+	{
+		if (str[var.i] == '\"' && var.flag == 0)
+			var.flag = 1;
+		else if (str[var.i] == '\"' && var.flag == 1)
+			var.flag = 0;
+		else if (str[var.i] == '\'' && var.flag == 0)
+			var.flag = 2;
+		else if (str[var.i] == '\'' && var.flag == 2)
+			var.flag = 0;
+		else
+			var.new[var.j++] = str[var.i];
+		var.i++;
+	}
+	var.new[var.j] = '\0';
+	return (var.new);
+}

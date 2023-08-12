@@ -5,11 +5,10 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: oait-bad <oait-bad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/08/08 15:31:32 by oait-bad          #+#    #+#             */
-/*   Updated: 2023/08/08 15:31:55 by oait-bad         ###   ########.fr       */
+/*   Created: 2023/08/09 13:03:35 by ybargach          #+#    #+#             */
+/*   Updated: 2023/08/12 13:50:23 by oait-bad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 
 #include "../minishell.h"
 
@@ -39,7 +38,7 @@ char	*ft_strjoin_here(char const *s1, char const *s2)
 	return (p);
 }
 
-void	here_doc_child(t_builtin *arr, t_all all, char *args)
+void	here_doc_child(t_builtin *arr, char *args)
 {
 	char	*p;
 	char	*limiter;
@@ -56,43 +55,58 @@ void	here_doc_child(t_builtin *arr, t_all all, char *args)
 		free(p);
 	}
 	free(p);
-	free(args);
+	free(limiter);
 	close(arr->her_p[1]);
-	//exit_value = 0;
+	g_exit_value = 0;
 	exit(0);
 }
 
-int	here_doc_parent(t_builtin *arr, t_all all, char *args)
+int	here_doc_parent(t_builtin *arr)
 {
 	int	exit;
 
 	wait(&exit);
+	if (WEXITSTATUS(exit) == 69)
+		arr->here_exit = 1;
+	dprintf(2, "%d\n", WEXITSTATUS(exit));
 	close(arr->her_p[1]);
-	//close(arr->her_p[0]);
 	return (arr->her_p[0]);
 }
 
-int	here_doc(t_builtin *arr, t_all all, char *args)
+void	exit_status(int number)
+{
+	if (number == SIGINT)
+	{
+		exit(69);
+	}
+}
+
+int	here_doc(t_builtin *arr, char *args)
 {
 	int		a;
 	int		c;
-	char	*p;
 
 	c = dup(0);
 	a = pipe(arr->her_p);
 	if (a == -1)
 	{
 		perror("pipe: ");
-		//exit_value = 1;
+		g_exit_value = 1;
 	}
 	arr->pid = fork();
 	if (arr->pid == -1)
 		perror("fork: ");
 	if (arr->pid == 0)
-		here_doc_child(arr, all, args);
+	{
+		signal(SIGINT, exit_status);
+		here_doc_child(arr, args);
+	}
 	else
-		arr->her_f = here_doc_parent(arr, all, args);
+		arr->her_f = here_doc_parent(arr);
 	close(arr->her_p[1]);
-	dup2(arr->her_f, c);
-    return (arr->her_f);
+	//close(arr->her_p[0]);
+	free(args);
+	//dup2(arr->her_f, c);
+	//close(c);
+	return (arr->her_f);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   split_input.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: oait-bad <oait-bad@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ybargach <ybargach@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/11 01:18:40 by oait-bad          #+#    #+#             */
-/*   Updated: 2023/07/30 14:08:04 by oait-bad         ###   ########.fr       */
+/*   Updated: 2023/07/26 10:15:14 by ybargach         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,29 +124,3 @@ char	***split_cmds(char *str)
 	free(pipes);
 	return (cmds);
 }
-
-//int main()
-//{
-//	char	*line;
-//	char	***cmds;
-//	int		i;
-
-//	while (1)
-//	{
-//		i = 0;
-//		line = readline("minishell$ ");
-//		if (!line)
-//			break ;
-//		cmds = split_cmds(line);
-//		while (cmds[i])
-//		{
-//			int j = 0;
-//			while (cmds[i][j])
-//			{
-//				printf("cmd[%d][%d] = %s\n", i, j, cmds[i][j]);
-//				j++;
-//			}
-//			i++;
-//		}
-//	}
-//}
