@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_unset.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ybargach <ybargach@student.42.fr>          +#+  +:+       +#+        */
+/*   By: oait-bad <oait-bad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/11 14:16:09 by ybargach          #+#    #+#             */
-/*   Updated: 2023/08/12 08:02:05 by ybargach         ###   ########.fr       */
+/*   Updated: 2023/08/13 01:00:30 by oait-bad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,19 +25,12 @@ void	check_unset(t_builtin *arr, char **add)
 	}
 }
 
-void	check_cmd_unset(t_builtin *arr, char **add)
+void	delet_un(t_env **head, t_env *current, t_env *prev, t_env *tmp)
 {
-	arr->a = 0;
-	while (add[arr->a])
-	{
-		arr->b = 0;
-		while (add[arr->a][arr->b])
-		{
-			check_unset(arr, add);
-			arr->b++;
-		}
-		arr->a++;
-	}
+	if (prev == NULL)
+		cmp_delete(head, tmp, current);
+	else
+		cmp_delete_two(current, prev);
 }
 
 void	delete_unset(t_env **head, t_builtin *arr)
@@ -53,13 +46,14 @@ void	delete_unset(t_env **head, t_builtin *arr)
 	{
 		arr->new_name = ft_strdup_unset(current->name);
 		if (ft_strcmp(arr->name, "_") == 0)
+		{
+			free(arr->new_name);
 			return ;
+		}
 		if (ft_strcmp(arr->name, arr->new_name) == 0)
 		{
-			if (prev == NULL)
-				cmp_delete(head, tmp, current);
-			else
-				cmp_delete_two(current, prev);
+			delet_un(head, current, prev, tmp);
+			free(arr->new_name);
 			return ;
 		}
 		free(arr->new_name);

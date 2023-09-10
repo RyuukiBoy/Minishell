@@ -3,14 +3,29 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_cd_pwd.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ybargach <ybargach@student.42.fr>          +#+  +:+       +#+        */
+/*   By: oait-bad <oait-bad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/11 14:15:42 by ybargach          #+#    #+#             */
-/*   Updated: 2023/08/12 08:01:06 by ybargach         ###   ########.fr       */
+/*   Updated: 2023/08/13 01:00:41 by oait-bad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+
+void	check_cmd_unset(t_builtin *arr, char **add)
+{
+	arr->a = 0;
+	while (add[arr->a])
+	{
+		arr->b = 0;
+		while (add[arr->a][arr->b])
+		{
+			check_unset(arr, add);
+			arr->b++;
+		}
+		arr->a++;
+	}
+}
 
 void	change_in_env(char *old_pwd, t_env *env)
 {

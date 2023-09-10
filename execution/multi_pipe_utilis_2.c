@@ -6,7 +6,7 @@
 /*   By: ybargach <ybargach@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/09 14:48:04 by ybargach          #+#    #+#             */
-/*   Updated: 2023/08/12 08:04:03 by ybargach         ###   ########.fr       */
+/*   Updated: 2023/08/12 18:10:46 by ybargach         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ void	execv_cmd_path(t_all all, t_builtin *arr)
 {
 	close(arr->p[0]);
 	close(arr->p[1]);
-	arr->exe = execve(all.fd->n_cmd[0], all.fd->n_cmd, arr->env_path);
+	arr->exe = execve(all.fd->n_cmd[0], all.fd->n_cmd, arr->env_v);
 	if (arr->exe == -1)
 	{
 		ft_putstr_fd(*all.fd->n_cmd, 2);
@@ -34,7 +34,7 @@ void	execv_path(t_all all, t_builtin *arr)
 		{
 			close(arr->p[0]);
 			close(arr->p[1]);
-			arr->exe = execve(all.fd->n_cmd[0], all.fd->n_cmd, arr->env_path);
+			arr->exe = execve(all.fd->n_cmd[0], all.fd->n_cmd, arr->env_v);
 			if (arr->exe == -1)
 			{
 				ft_putstr_fd(*all.fd->n_cmd, 2);
@@ -42,6 +42,13 @@ void	execv_path(t_all all, t_builtin *arr)
 			}
 			g_exit_value = 126;
 			exit(126);
+		}
+		else
+		{
+			ft_putstr_fd(*all.fd->n_cmd, 2);
+			write(2, ": No such file or directory\n", 28);
+			g_exit_value = 127;
+			exit(127);
 		}
 	}
 	else
@@ -52,7 +59,7 @@ void	execv_cmd(t_all all, t_builtin *arr)
 {
 	close(arr->p[0]);
 	close(arr->p[1]);
-	arr->exe = execve(arr->fcmd, all.fd->n_cmd, arr->env_path);
+	arr->exe = execve(arr->fcmd, all.fd->n_cmd, arr->env_v);
 	if (arr->exe == -1)
 	{
 		ft_putstr_fd(*all.fd->n_cmd, 2);

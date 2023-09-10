@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   function_utils_0.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: oait-bad <oait-bad@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ybargach <ybargach@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/31 09:48:28 by ybargach          #+#    #+#             */
-/*   Updated: 2023/08/12 14:02:01 by oait-bad         ###   ########.fr       */
+/*   Updated: 2023/08/12 14:37:10 by ybargach         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,6 @@ char	*dlt_cmd(char *cmd, t_builtin *arr)
 char	*any_cmd(char *cmd, t_builtin *arr, t_all all)
 {
 	arr->move_b = 0;
-	arr->here_exit = 0;
 	all.fd->infd = 0;
 	all.fd->outfd = 1;
 	while (cmd[arr->move_b])

@@ -1,16 +1,16 @@
 NAME= minishell
-CFLAGS= -Wall -Wextra -Werror #-fsanitize=address -g3
+CFLAGS= -Wall -Wextra -Werror
 CC= cc
-ReadLine = -lreadline -L /Users/oait-bad/Desktop/readline-8.2 -I/Users/oait-bad/Desktop/readline-8.2 -lcurses 
+ReadLine = -lreadline -L /Users/oait-bad/Desktop/readline-8.2 -I/Users/oait-bad/Desktop/readline-8.2 -lcurses
 
-SRC= ./builtin/builtin_cd_pwd.c ./builtin/builtin_echo.c ./builtin/builtin_env.c ./builtin/builtin_exit_multi.c \
-	 ./builtin/builtin_exit.c ./builtin/builtin_export.c ./builtin/builtin_unset.c execution/expantion.c \
-	 ./builtin/builtin_utilis_2.c ./builtin/builtin_utilis_3.c ./builtin/builtin_utilis_4.c ./builtin/builtin_utilis.c \
-	 execution/check_single_cmd.c execution/exec_single_cmd.c execution/here_doc.c \
+SRC= builtin/builtin_cd_pwd.c builtin/builtin_echo.c builtin/builtin_env.c builtin/builtin_exit_multi.c \
+	 builtin/builtin_exit.c builtin/builtin_export.c builtin/builtin_unset.c execution/expantion.c \
+	 builtin/builtin_utilis_2.c builtin/builtin_utilis_3.c builtin/builtin_utilis_4.c builtin/builtin_utilis.c \
+	 execution/check_single_cmd.c execution/exec_single_cmd.c execution/here_doc.c parse_v2/parse_utilis_1.c \
 	 execution/multi_pipe_ulitis_1.c execution/multi_pipe_utilis_2.c execution/multi_pipe_utilis.c \
 	 execution/multi_pipe.c execution/single_cmd.c function_utils/function_utils_0.c \
 	 function_utils/function_utils_1.c function_utils/function_utils_2.c function_utils/function_utils_3.c \
-	 function_utils/function_utils_4.c function_utils/function_utils_5.c \
+	 function_utils/function_utils_4.c function_utils/function_utils_5.c execution/close_fd_pipe.c \
 	 function_utils/function_utils_6.c function_utils/function_utils_7.c function_utils/function_utils_8.c function_utils/function_utils.c \
 	 parse_v2/check_opers.c parse_v2/get_tokens.c parse_v2/parse_files.c \
 	 parse_v2/parse_utils.c parse_v2/parse.c parse_v2/split_input.c libft/ft_putchar_fd.c \
@@ -27,12 +27,12 @@ all: $(NAME)
 
 $(NAME): $(OBJ)
 	$(CC) $(CFLAGS) $(ReadLine) $(OBJ) -o $(NAME)
-	make -s -C libft/
-	mv libft/libft.a .
+
 clean:
 	rm -f $(OBJ)
-	make -s -C libft/ clean
+
 fclean: clean
-	rm -f libft.a
 	rm -f $(NAME)
+
 re: fclean all
+

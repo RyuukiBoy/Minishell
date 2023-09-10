@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ybargach <ybargach@student.42.fr>          +#+  +:+       +#+        */
+/*   By: oait-bad <oait-bad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/20 00:43:15 by oait-bad          #+#    #+#             */
-/*   Updated: 2023/08/09 07:08:11 by ybargach         ###   ########.fr       */
+/*   Updated: 2023/08/13 01:11:23 by oait-bad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,9 @@ int	check_redirections(char *str)
 	i = 0;
 	while (str[i])
 	{
-		if (str[i] == '>' && str[i + 1] == '>' && str[i + 2] == '>')
+		if (str[i] == ';' || str[i] == '(' || str[i] == ')')
+			return (0);
+		else if (str[i] == '>' && str[i + 1] == '>' && str[i + 2] == '>')
 		{
 			printf("minishell: syntax error near unexpected token '>'\n");
 			return (0);
@@ -111,11 +113,20 @@ int	check_pipes_2(char *str)
 int	parse(char *line)
 {
 	if (!check_pipes(line) || !check_last_redir(line) || !check_last_pipe(line))
+	{
+		g_exit_value = 258;
 		return (0);
+	}
 	else if (!check_redirections(line) || !check_redirections_2(line)
 		|| !check_pipes_2(line))
+	{
+		g_exit_value = 258;
 		return (0);
+	}
 	else if (!norm_redirections_check(line) || !check_quotes(line))
+	{
+		g_exit_value = 258;
 		return (0);
+	}
 	return (1);
 }

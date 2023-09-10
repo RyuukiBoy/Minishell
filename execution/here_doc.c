@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   here_doc.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: oait-bad <oait-bad@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ybargach <ybargach@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/09 13:03:35 by ybargach          #+#    #+#             */
-/*   Updated: 2023/08/12 13:50:23 by oait-bad         ###   ########.fr       */
+/*   Updated: 2023/08/12 20:14:46 by ybargach         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,6 @@ int	here_doc_parent(t_builtin *arr)
 	wait(&exit);
 	if (WEXITSTATUS(exit) == 69)
 		arr->here_exit = 1;
-	dprintf(2, "%d\n", WEXITSTATUS(exit));
 	close(arr->her_p[1]);
 	return (arr->her_p[0]);
 }
@@ -83,12 +82,8 @@ void	exit_status(int number)
 
 int	here_doc(t_builtin *arr, char *args)
 {
-	int		a;
-	int		c;
-
-	c = dup(0);
-	a = pipe(arr->her_p);
-	if (a == -1)
+	signal(SIGINT, SIG_IGN);
+	if (pipe(arr->her_p) == -1)
 	{
 		perror("pipe: ");
 		g_exit_value = 1;
@@ -104,9 +99,6 @@ int	here_doc(t_builtin *arr, char *args)
 	else
 		arr->her_f = here_doc_parent(arr);
 	close(arr->her_p[1]);
-	//close(arr->her_p[0]);
 	free(args);
-	//dup2(arr->her_f, c);
-	//close(c);
 	return (arr->her_f);
 }

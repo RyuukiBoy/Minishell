@@ -6,7 +6,7 @@
 /*   By: ybargach <ybargach@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/14 10:37:13 by ybargach          #+#    #+#             */
-/*   Updated: 2023/08/12 08:04:17 by ybargach         ###   ########.fr       */
+/*   Updated: 2023/08/12 19:01:38 by ybargach         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,8 +97,6 @@ void	check_io_file_single(t_all all, t_builtin *arr, t_env **new_env)
 		dup2(all.cmd->infd, 0);
 		if (all.cmd->outfd != 1)
 			dup2(all.cmd->outfd, 1);
-		else
-			dup(arr->output);
 		check_single_cmd(all, arr, new_env);
 	}
 	else

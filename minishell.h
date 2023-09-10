@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: oait-bad <oait-bad@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ybargach <ybargach@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/08 16:37:31 by oait-bad          #+#    #+#             */
-/*   Updated: 2023/08/12 13:38:14 by oait-bad         ###   ########.fr       */
+/*   Updated: 2023/08/12 22:07:00 by ybargach         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,11 @@ typedef struct s_norm
 
 typedef struct s_builtin
 {
+	int		arr_fd;
+	int		aa;
+	int		bb;
+	int		here_exit;
+	int		here_fd[OPEN_MAX];
 	int		input;
 	int		output;
 	int		a;
@@ -91,7 +96,6 @@ typedef struct s_builtin
 	int		args;
 	int		space;
 	int		new_line;
-	int		here_exit;
 	int		pid;
 	int		p[2];
 	int		her_p[2];
@@ -127,6 +131,7 @@ typedef struct s_builtin
 	char	*path1;
 	char	*path2;
 	char	*no;
+	char	**env_v;
 	char	**bf_cmd;
 	char	*cmd_ns;
 	char	**a_cmd;
@@ -215,11 +220,24 @@ int	g_exit_value;
 #  define BUFFER_SIZE 5
 # endif
 
+void	close_all_fd(t_builtin *arr);
+void	exit_all_fd(t_builtin *arr, t_all all, char **b_cmd, char **n_cmd);
+void	check_cmd_norm(t_builtin *arr, t_env **new_env, t_all all);
+void	redirect(char **cmd, t_builtin *arr, t_all all);
+void	redir_for_norm(char **cmd, t_builtin *arr, t_all all, char *b_limir);
+void	here_norm(t_all all, t_builtin *arr, char *b_limir);
+int		check_name_file(char *cmd);
+int		check_opera_file(char *cmd, int a);
+void	file_err(char *file);
+void	quo_number(t_builtin *arr, int a);
 void	expaton_norm(t_builtin *arr, t_env *new_env);
 int		check_expa(t_builtin *arr);
 int		ft_strlen_int(const char *str);
 void	expation(t_builtin *arr, t_env *new_env);
 void	dollar_function(t_builtin *arr, t_env *new_env);
+void	more_norm(t_all all, char *b_limir);
+char	*space_limt(char *cmd);
+void	file_error(char *cmd);
 // builtin_cd_pwd
 
 void	builtin_pwd(t_builtin *arr);
@@ -425,7 +443,6 @@ void	src_env_quo(t_builtin *arr, t_env *new_env);
 void	ft_free_qoutes(t_builtin *arr);
 void	ft_free_dollar(t_builtin *arr);
 void	src_env_quo(t_builtin *arr, t_env *new_env);
-void	here_norm(t_all all, t_builtin *arr, char *b_limir);
 
 // function_utils_8
 
@@ -460,6 +477,7 @@ char	*ft_strtrim(char const *s1, char const *set);
 
 /* end get_next_line function */
 
+void	rl_replace_line(const char *text, int clear_undo);
 char	*delete_quotes(char *str);
 char	**split_args(char *str);
 char	***split_cmds(char *str);
@@ -479,10 +497,5 @@ int		check_quotes(char *str);
 void	free_exp(t_exp *exp);
 int		is_inside_squotes(char *str, int i);
 char	*ft_substr_simple(char const *s, unsigned int start, size_t len);
-void	file_error(char *cmd);
-void	file_err(char *file);
-int		check_opera_file(char *cmd, int a);
-void	sig_handler(int sig);
-void	rl_replace_line(const char *, int);
 
 #endif

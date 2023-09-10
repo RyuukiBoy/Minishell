@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   multi_pipe.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: oait-bad <oait-bad@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ybargach <ybargach@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/16 21:20:38 by ybargach          #+#    #+#             */
-/*   Updated: 2023/08/12 14:45:33 by oait-bad         ###   ########.fr       */
+/*   Updated: 2023/08/12 22:06:20 by ybargach         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,24 +97,23 @@ void	check_cmd(char **b_cmd, t_builtin *arr, t_env **new_env)
 	all.fd = (t_iof *)malloc(sizeof(t_iof));
 	all.fd->n_cmd = NULL;
 	all.fd->infd = 0;
+	arr->arr_fd = 0;
 	all.fd->outfd = 1;
 	all.cmd = NULL;
 	arr->c = 0;
 	while (b_cmd[arr->c])
 	{
 		b_cmd[arr->c] = any_cmd(b_cmd[arr->c], arr, all);
-		if (arr->here_exit == 1)
-			return ;
 		n_cmd = ft_split_space(b_cmd[arr->c], ' ');
+		if (arr->here_exit == 1)
+		{
+			exit_all_fd(arr, all, b_cmd, n_cmd);
+			return ;
+		}
 		add_back_cmd(&all.cmd, n_cmd, all.fd);
 		ft_free_double(n_cmd);
 		arr->c++;
 	}
 	ft_free_double(b_cmd);
-	if (size_list_cmd(all.cmd, arr) == 1)
-		check_io_file_single(all, arr, new_env);
-	else
-		multi_cmd(all, arr, new_env);
-	free_iof(all.fd);
-	free_cmd(all.cmd);
+	check_cmd_norm(arr, new_env, all);
 }

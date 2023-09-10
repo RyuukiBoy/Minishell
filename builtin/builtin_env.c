@@ -6,7 +6,7 @@
 /*   By: ybargach <ybargach@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/11 14:16:01 by ybargach          #+#    #+#             */
-/*   Updated: 2023/08/12 08:01:23 by ybargach         ###   ########.fr       */
+/*   Updated: 2023/08/12 20:13:51 by ybargach         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,26 +75,26 @@ t_env	*env_null(t_builtin *arr, t_env **head)
 
 t_env	*builtin_env(char **env, t_builtin *arr, t_env **head)
 {
-	arr->a = 0;
+	arr->aa = 0;
 	if (*env == NULL || env == NULL)
 		return (env_null(arr, head));
-	while (env[arr->a])
+	while (env[arr->aa])
 	{
-		arr->b = 0;
-		while (env[arr->a][arr->b])
+		arr->bb = 0;
+		while (env[arr->aa][arr->bb])
 		{
-			if (env[arr->a][arr->b] == '=')
+			if (env[arr->aa][arr->bb] == '=')
 			{
-				arr->name = ft_substr(env[arr->a], 0, arr->b + 1);
-				arr->value = ft_strdup(env[arr->a] + arr->b + 1);
+				arr->name = ft_substr(env[arr->aa], 0, arr->bb + 1);
+				arr->value = ft_strdup(env[arr->aa] + arr->bb + 1);
 				add_back(head, arr->name, arr->value);
 				free(arr->name);
 				free(arr->value);
 				break ;
 			}
-			arr->b++;
+			arr->bb++;
 		}
-		arr->a++;
+		arr->aa++;
 	}
 	g_exit_value = 0;
 	return (*head);

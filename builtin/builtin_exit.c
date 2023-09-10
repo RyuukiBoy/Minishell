@@ -6,7 +6,7 @@
 /*   By: ybargach <ybargach@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/06 13:13:11 by ybargach          #+#    #+#             */
-/*   Updated: 2023/08/12 08:01:53 by ybargach         ###   ########.fr       */
+/*   Updated: 2023/08/12 15:54:47 by ybargach         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,10 @@ void	welcome_to_exit(char *add, t_builtin *arr)
 	while (add[arr->a])
 	{
 		if (!(add[arr->a] >= '0' && add[arr->a] <= '9'))
+		{
 			print_error_exit(add);
+			return ;
+		}
 		arr->a++;
 	}
 	print_exit(add);
